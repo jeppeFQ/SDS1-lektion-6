@@ -113,20 +113,16 @@ Tre ting er galt med filen, og `read_csv` fortæller kun om den ene ad gangen.
 
 ```python
 opslag = pd.read_csv("jobapplications_fall-2023.csv",
-                     sep=";", encoding="mac_roman", skiprows=1)
+                     sep=";", encoding="mac_roman", skiprows=[1, 7174])
 ```
 
-## Om tegnsæt
+## Kort om tegnsæt
 
-En tekstfil er bytes. Tegnsættet er den **aftale** om, hvilket tegn hver byte betyder.
+- En tekstfil er bytes. Tegnsættet er den **aftale** om, hvilket tegn hver byte betyder.
 
-::: {.incremental}
+- Byten `0xBF` er `ø` i Mac Roman, `¿` i Latin-1 og ugyldig i UTF-8.
 
-Byten `0xBF` er `ø` i Mac Roman, `¿` i Latin-1 og ugyldig i UTF-8.
-
-Filen indeholder ingen oplysning om, hvilken aftale der gælder ... Man gætter typisk, indtil teksten ser rigtig ud.
-
-:::
+- Filen indeholder ingen oplysning om, hvilken aftale der gælder ... man gætter typisk, indtil teksten ser rigtig ud.
 
 <br>
 
@@ -151,7 +147,7 @@ print(opslag["source"].value_counts())
 
 <br>
 
-Et udsnit på 14 % af materialet, så det kan køre i browseren. Det fulde datasæt har 7.207 opslag.
+Et udsnit på ca. 10 % af materialet, så det kan køre i browseren. Det fulde datasæt har 7.207 opslag.
 
 ## Hvad er der i tabellen?
 
@@ -164,13 +160,13 @@ print(opslag.isna().sum())
 
 <br>
 
-::: {.incremental}
+::: {.fragment}
 
 `company` mangler for langt de fleste opslag. Men ikke tilfældigt — den findes for **alle** opslag fra jobbank.dk og for **ingen** fra de tre andre.
 
 :::
 
-## Firmanavnet er ikke væk
+## Firmanavnet eksisterer dog for de andre ... 
 
 ```{pyodide}
 #| autorun: false
@@ -190,7 +186,7 @@ Feltet er ikke data. Det er **tekst, der indeholder data**.
 
 :::
 
-## Hent det ud
+## Hent dataen ud fra strengen
 
 ```{pyodide}
 #| autorun: false
@@ -202,7 +198,7 @@ for i, l in enumerate(linjer):
 
 <br>
 
-`.split("\n")` er præcis den samme metode som i lektion 2 — bare med linjeskift som adskiller i stedet for mellemrum.
+`.split("\n")` er præcis den samme metode som i lektion 2 ... bare med linjeskift som adskiller i stedet for mellemrum.
 
 ## For hele kolonnen
 
@@ -219,9 +215,9 @@ print(dele.str.len().value_counts())
 
 ::: {.incremental}
 
-De fleste felter har tre linjer: firma, sted, indrykningsdato.
+- De fleste felter har tre linjer: `firma, sted, indrykningsdato`.
 
-Men ikke alle. Nogle har to. Hvad er der sket der — og hvad sker der med jeres kode, hvis I bare tager `[0]`?
+- Men ikke alle. Nogle har to. 
 
 :::
 
@@ -229,15 +225,9 @@ Men ikke alle. Nogle har to. Hvad er der sket der — og hvad sker der med jeres
 
 <span class="timer" data-time="300"></span>
 
-::: {.incremental}
+- Fire scrapere har lagt data i felterne på fire måder. 
 
-- Fire scrapere har lagt data i felterne på fire måder. Hvem skal rydde op, og hvornår?
-
-- Er det bedre at rette i data eller at skrive kode, der kan håndtere alle fire varianter?
-
-- Hvad skal der stå i metodeafsnittet om, at 87 % af firmanavnene er hentet ud af et fritekstfelt?
-
-:::
+- Er det bedre at rette i data (e.g., i Excel) eller at skrive kode, der kan håndtere alle fire varianter?
 
 # Del 2: Preprocessing
 
@@ -265,20 +255,14 @@ Hvert unikt ord er en **dimension**. Skal vi lave en tabel med ét dokument per 
 
 To ord, der bliver blandet sammen hele tiden:
 
-::: {.incremental}
-
 - **Tokens** er forekomster. Står `job` 400 gange, er det 400 tokens.
 - **Typer** er unikke ord. Så er `job` én type.
-
-:::
 
 <br>
 
 ::: {.incremental}
 
-Preprocessing gør to forskellige ting: nogle skridt fjerner mange **tokens**, andre fjerner mange **typer**. De to har vidt forskellige konsekvenser.
-
-Hold øje med begge tal på de næste slides.
+Preprocessing gør to forskellige ting: nogle trin fjerner mange **tokens**, andre fjerner mange **typer**. De to har vidt forskellige konsekvenser for analysen.
 
 :::
 
@@ -316,13 +300,9 @@ print("Typer:  ", len(set(lower)))
 
 <br>
 
-::: {.incremental}
-
-Ingen tokens forsvinder — men mange tusind typer gør.
+Ingen **tokens** forsvinder, men mange **typer** gør.
 
 `Vi` og `vi` var to forskellige ord. Det var `København` og `københavn` også.
-
-:::
 
 ## P: tegnsætning
 
@@ -340,13 +320,9 @@ print("Typer:  ", len(set(uden_tegn)))
 
 <br>
 
-::: {.incremental}
+- Det største potentielle enkeltproblem i hele kæden. `job.`, `job,` og `job` var tre ord.
 
-Det største enkeltspring i hele kæden. `job.`, `job,` og `job` var tre ord.
-
-`.strip()` fjerner kun i enderne. `søger/finder` er stadig ét ord.
-
-:::
+- `.strip()` fjerner kun i enderne.
 
 ## N: tal
 
@@ -360,13 +336,28 @@ print("Typer:  ", len(set(uden_tal)))
 
 <br>
 
-::: {.incremental}
+- I jobopslag kan tal være alt fra lønninger, ansøgningsfrister, timetal, paragraffer osv..
 
-I jobopslag er tal ofte lønninger, ansøgningsfrister, timetal og paragraffer.
+- Er det støj, eller er det indhold? Det afhænger helt af spørgsmålet.
 
-Er det støj, eller er det indhold? Det afhænger helt af spørgsmålet.
+---
 
-:::
+```
+[o for o in uden_tegn if not any(c.isdigit() for c in o)]
+     ^                              ^
+     o = et ORD                     c = et TEGN i det ord
+```
+
+<br>
+<br>
+
+```
+for o in uden_tegn          for hvert ORD i listen
+    for c in o              kig på hvert TEGN i ordet
+        c.isdigit()         er tegnet et ciffer?
+    any(...)                var mindst ét af dem et ciffer?
+    if not ...              hvis nej: behold ordet
+```
 
 ## W: stopord
 
@@ -388,8 +379,12 @@ print("Typer:  ", len(set(uden_stop)))
 
 ::: {.incremental}
 
-Her sker det modsatte af de foregående skridt. **En tredjedel af alle tokens forsvinder** — men vokabularet falder kun med antallet af ord på listen.
+- Her sker det modsatte af de foregående skridt. **En tredjedel af alle tokens forsvinder** ... men vokabularet falder kun med antallet af ord på listen.
 
+:::
+
+::: {.aside}
+`"""` er en streng, der må fylde flere linjer.
 :::
 
 ## I: sjældne ord
@@ -414,7 +409,7 @@ print("Typer:  ", len(set(beskaaret)))
 
 ::: {.incremental}
 
-Nu falder vokabularet dramatisk, mens næsten alle tokens bliver.
+Nu falder **vokabularet** (typer) dramatisk, mens næsten alle tokens bliver.
 
 :::
 
@@ -443,21 +438,18 @@ Tallene her er fra det **fulde** materiale på 7.207 opslag.
 
 ::: {.incremental}
 
-**Stopord** fjerner 1,5 millioner tokens og 78 typer. Teksten bliver kortere; tabellen bliver ikke smallere.
+- **Stopord** fjerner 1,5 millioner tokens og 78 typer. Teksten bliver kortere; tabellen bliver ikke smallere.
 
-**Sjældne ord** fjerner 70.000 typer og kun 3 % af tokens. Tabellen bliver meget smallere; teksten bliver næsten ikke kortere.
+- **Sjældne ord** fjerner 70.000 typer og kun 3 % af tokens. Tabellen bliver meget smallere; teksten bliver næsten ikke kortere.
 
 :::
 
 <br>
 
-::: {.incremental}
 
-**42.012 ord optræder i præcis ét dokument.** En fjerdedel af hele vokabularet.
+- **42.012 ord optræder i præcis ét dokument.** En fjerdedel af hele vokabularet.
 
-De fylder en fjerdedel af tabellen og kan per definition ikke bruges til at sammenligne dokumenter.
-
-:::
+  - De fylder en fjerdedel af tabellen og kan per definition ikke bruges til at sammenligne dokumenter.
 
 ## Denny & Spirling: rækkefølgen og kombinationen
 
@@ -467,47 +459,36 @@ Syv operationer, der hver kan slås til eller fra, giver **2⁷ = 128** forskell
 
 Vi prøvede fire af dem på 2.000 opslag:
 
-```
-L=1 P=1 N=1 S=1  ->  45.638 unikke ord
-L=1 P=0 N=0 S=0  ->  71.241 unikke ord
-L=0 P=0 N=0 S=0  ->  78.544 unikke ord
-```
+
+
+`L=1 P=1 N=1 S=1`  ->  45.638 unikke ord
+`L=1 P=0 N=0 S=0`  ->  71.241 unikke ord
+`L=0 P=0 N=0 S=0`  ->  78.544 unikke ord
+
 
 Samme tekster. Vokabularet varierer med en faktor to.
 
 :::
 
-## Hvorfor det er værre for usuperviserede metoder
+## Konsekvenser for usuperviserede metoder
 
-::: {.incremental}
+- Ved **klassifikation** kan man måle sig frem: prøv kombinationerne, vælg den med den bedste accuracy. *Der findes et facit.*
 
-Ved **klassifikation** kan man måle sig frem: prøv kombinationerne, vælg den med den bedste accuracy. Der findes et facit.
-
-Ved **klyngeanalyse og topic models** findes der ikke noget facit. Ingen kan sige, om fire klynger er rigtigere end fem.
-
-:::
+- Ved **klyngeanalyse og topic models** findes der *ikke noget facit*. Ingen kan sige, om fire klynger er rigtigere end fem.
 
 <br>
 
-::: {.incremental}
+Preprocessing-råd kommer overvejende fra klassifikationslitteraturen og bliver overført ukritisk til det usuperviserede. **Det er Denny & Spirlings hovedanke.**
 
-Preprocessing-råd kommer overvejende fra klassifikationslitteraturen og bliver overført ukritisk til det usuperviserede. Det er Denny & Spirlings hovedanke.
-
-> Konsekvensen: jeres forbehandlingsvalg kan ændre konklusionen, uden at nogen kan opdage det.
-
-:::
+> Konsekvensen: jeres preprocessingvalg kan ændre konklusionen, uden at nogen kan opdage det.
 
 ## Hvad man så gør
 
-::: {.incremental}
-
 - **Skriv alle valg ned.** Hvert eneste. De hører i metodeafsnittet, ikke i en kommentar i koden.
 
-- **Prøv flere kombinationer.** Holder resultatet på tværs af dem, er det robust. Gør det ikke, er det et resultat om jeres forbehandling.
+- **Prøv flere kombinationer.** Holder resultatet på tværs af dem, er det **robust**. Gør det ikke, er det et resultat om jeres forbehandling.
 
 - **Denny & Spirling foreslår `preText`**, som kører kombinationerne systematisk og måler, hvor meget de flytter resultatet.
-
-:::
 
 # Del 3: Datastrukturen
 
@@ -525,7 +506,7 @@ Preprocessing-råd kommer overvejende fra klassifikationslitteraturen og bliver 
 
 ::: {.incremental}
 
-Det er den struktur, PCA og k-means skal bruge. Hver række er et **punkt i et rum** med lige så mange dimensioner, som der er ord.
+Det er den struktur, `PCA` og `k-means` skal bruge. Hver række er et **punkt i et rum** med lige så mange dimensioner, som der er ord.
 
 :::
 
@@ -549,13 +530,11 @@ print("Sparsity:", round((1 - udfyldte / celler) * 100, 2), "%")
 
 ::: {.incremental}
 
-Langt over 90 % af tabellen er nuller. Det er ikke en fejl — det er sådan sprog er. Intet dokument bruger mere end en brøkdel af vokabularet.
+Langt over 90 % af tabellen er nuller. Det er ikke en fejl ... det er sådan sprog er. Intet dokument bruger mere end en brøkdel af vokabularet.
 
 :::
 
 ## Hvorfor sparsity er et problem
-
-::: {.incremental}
 
 - **Afstande bliver meningsløse.** To dokumenter uden fælles ord har samme afstand som to andre dokumenter uden fælles ord. I et 25.000-dimensionalt rum er næsten alt lige langt fra alt.
 
@@ -563,13 +542,11 @@ Langt over 90 % af tabellen er nuller. Det er ikke en fejl — det er sådan spr
 
 - **Hukommelse.** 7.207 × 24.804 er 179 millioner tal.
 
-:::
-
 <br>
 
-::: {.incremental}
+::: {.aside}
 
-Det er derfor, næste skridt hedder dimensionalitetsreduktion — og derfor PCA kommer næste gang.
+Det er derfor, vi har brug for **dimensionalitetsreduktion**.
 
 :::
 
@@ -577,22 +554,10 @@ Det er derfor, næste skridt hedder dimensionalitetsreduktion — og derfor PCA 
 
 Når først materialet er en tabel af optællinger, åbner der sig en række klassiske korpuslingvistiske greb:
 
-::: {.incremental}
-
-- **Frekvenslister** — hvad fylder mest, og fylder det mere end forventet?
-- **Kollokation** — hvilke ord optræder sammen oftere, end tilfældet ville give?
-- **Nøgleord** — hvilke ord er karakteristiske for ét delkorpus sammenlignet med et andet?
-- **Konkordans** — gå tilbage til teksten og se ordet i sin kontekst
-
-:::
-
-<br>
-
-::: {.incremental}
-
-Det sidste er det vigtigste. Tællingen fortæller, hvor man skal kigge. Den fortæller ikke, hvad man ser.
-
-:::
+- **Frekvenslister**: hvad fylder mest, og fylder det mere end forventet?
+- **Kollokation**: hvilke ord optræder sammen oftere, end tilfældet ville give?
+- **Nøgleord**: hvilke ord er karakteristiske for ét delkorpus sammenlignet med et andet?
+- **Konkordans**: gå tilbage til teksten og se ordet i sin kontekst
 
 ## Frekvens er ikke nok
 
@@ -626,43 +591,9 @@ print(round(paa_engelsk.mean() * 100, 1), "%")
 
 <br>
 
-::: {.incremental}
-
 En dansk stopordsliste rører ikke ved engelske stopord. De bliver stående og dominerer optællingen.
 
-Ingen af Denny & Spirlings syv operationer opdager det. Det er et **korpusproblem**, ikke et forbehandlingsproblem.
-
-:::
-
-<br>
-
-::: {.incremental}
-
-> Hvad gør I? Frasortér dem, oversæt dem, analysér dem hver for sig — eller lad være at bruge frekvens?
-
-## Og de domænespecifikke ord
-
-Ser man bort fra de engelske, står `arbejde`, `stillingen`, `samt`, `erfaring` og `opgaver` tilbage.
-
-::: {.incremental}
-
-Det er ord, der står i næsten alle jobopslag, **netop fordi de er jobopslag**. De skiller ikke ét opslag fra et andet.
-
-En generel stopordsliste fanger dem ikke. Man er nødt til at kigge på sit eget materiale og selv beslutte.
-
-:::
-
-## Nøgleord i stedet
-
-Idéen er at sammenligne to delkorpora i stedet for at kigge på ét.
-
-::: {.incremental}
-
-Hvilke ord er karakteristiske for `job.aka.dk` sammenlignet med `jobbank.dk`? Det er et andet spørgsmål end "hvilke ord er hyppigst", og det giver et helt andet svar.
-
-Samme logik ligger bag tf-idf, som vægter et ord op, hvis det er hyppigt i ét dokument og sjældent i resten.
-
-:::
+> Hvad gør I? Frasortér dem, oversæt dem, analysér dem hver for sig?
 
 # Del 4: spaCy
 
@@ -670,13 +601,12 @@ Samme logik ligger bag tf-idf, som vægter et ord op, hvis det er hyppigt i ét 
 
 Alt, hvad vi har lavet indtil nu, er **regler**: fjern disse tegn, fjern disse ord, klip enderne af.
 
-::: {.incremental}
+<br>
 
-En sprogmodel gør noget andet. Den er trænet på store mængder tekst og afgør ud fra **konteksten**, hvad hvert ord er.
+- En sprogmodel gør noget andet. Den er trænet på store mængder tekst og afgør ud fra **konteksten**, hvad hvert ord er.
 
-`spaCy` giver tokenisering, lemmatisering, ordklasser og navngivne entiteter — også for dansk.
+- `spaCy` giver tokenisering, lemmatisering, ordklasser og navngivne entiteter ... også for dansk sprog.
 
-:::
 
 <br>
 
@@ -690,18 +620,34 @@ spaCy indeholder kompileret kode og kan ikke køre i browseren. Koden herunder s
 import spacy
 
 nlp = spacy.load("da_core_news_sm")
-doc = nlp("Vi søger en erfaren socialrådgiver til vores team i Aarhus.")
+
+mikro = [
+    "Vi søger en erfaren socialrådgiver til vores team i Aarhus.",
+    "Stillingen er en fast stilling på 37 timer om ugen.",
+    "Du skal være uddannet cand.jur. og have mindst tre års erfaring.",
+    "Sekretariatet har kontor ved Nørreport Station i København.",
+    "Vi søgte sidste år en projektleder, og vi søger igen i 2024.",
+    "Regionen tilbyder et godt arbejdsmiljø og gode udviklingsmuligheder.",
+    "Ansøgningsfristen er den 12. november 2023 — send den via linket.",
+    "We are looking for a senior consultant to join our team in Esbjerg.",
+]
+
+doc = nlp(mikro[0])
 ```
 
 <br>
 
-`spacy.load()` henter en **model**, ikke bare en funktion. Teksten løber gennem en række trin, som hver tilføjer et lag information:
+- `spacy.load()` henter en **model**, ikke bare en funktion. Teksten løber gennem en række trin, som hver tilføjer et lag information:
 
-```
-tekst → tokenizer → tagger → lemmatizer → parser → ner → doc
-```
+- Resultatet er ikke en liste af strenge, men et objekt, hvor hvert ord kender sin egen grundform, ordklasse og rolle i sætningen.
 
-Resultatet er ikke en liste af strenge, men et objekt, hvor hvert ord kender sin egen grundform, ordklasse og rolle i sætningen.
+---
+
+![](resources/pipeline-design.svg){fig-align="center"}
+
+---
+
+[KONCEPTUELT OM SPACY; HVORDAN TRÆNET]
 
 ## Lemmatisering i stedet for stemming
 
@@ -712,19 +658,15 @@ for tok in doc:
 
 <br>
 
-::: {.incremental}
+- **Stemming** klipper enderne af efter en regel. `universitet` og `universel` kan ende samme sted.
 
-**Stemming** klipper enderne af efter en regel. `universitet` og `universel` kan ende samme sted.
-
-**Lemmatisering** slår grundformen op i en model, der kender sproget. `søger`, `søgte` og `søgt` bliver alle til `søge` — og `universel` bliver ved med at være `universel`.
-
-:::
+- **Lemmatisering** slår grundformen op i en model, der kender sproget. `søger`, `søgte` og `søgt` bliver alle til `søge`, og `universel` bliver ved med at være `universel`.
 
 <br>
 
 ::: {.incremental}
 
-`tok.is_stop` er en færdig stopordsliste. Den I selv skrev i lektion 2 var på 78 ord. Den her er lavet af folk, der arbejder med dansk.
+`tok.is_stop` er en færdig stopordsliste. Den I selv har skrevet var på 78 ord. Den her er lavet af folk, der arbejder med området.
 
 :::
 
@@ -732,20 +674,18 @@ for tok in doc:
 
 ```python
 navneord = [tok.lemma_ for tok in doc
-            if tok.pos_ in ("NOUN", "PROPN")]
+            if tok.pos_ in ("NOUN")]
 ```
 
 <br>
 
-I stedet for at fjerne ord fra en liste, kan I **beholde** en ordklasse.
+I stedet for at fjerne ord fra en liste, kan I **beholde** specifikke ordklasser.
 
-::: {.incremental}
+<br>
 
-I jobopslag ligger indholdet i navneordene: kompetencer, fag, steder, titler. Udsagnsordene er stort set de samme i alle opslag: *søger, tilbyder, forventer*.
+- I jobopslag ligger indholdet i **navneordene**: kompetencer, fag, steder, titler. **Udsagnsordene** er stort set de samme i alle opslag: *søger, tilbyder, forventer*.
 
-Det er en helt anden slags dimensionalitetsreduktion end en stopordsliste — og den er begrundet i sproget frem for i en liste, nogen har skrevet.
-
-:::
+- Det er en helt anden slags dimensionalitetsreduktion end en stopordsliste og den er begrundet i sproget frem for i en liste, nogen har skrevet.
 
 ## Hele korpusset
 
@@ -763,17 +703,26 @@ for doc in docs:
 
 <br>
 
-`nlp.pipe()` kører mange tekster igennem ad gangen og er langt hurtigere end en løkke med `nlp(t)`.
+- `nlp.pipe()` kører mange tekster igennem ad gangen og er langt hurtigere end en løkke med `nlp(t)`.
 
-::: {.incremental}
+- De fire betingelser i `if`-sætningen er præcis Denny & Spirlings P, N og W, bare bestemt ud fra en model i stedet for af en liste. Plus et filter på ordklasse, som ingen af de syv operationer dækker.
 
-De fire betingelser i `if`-sætningen er præcis Denny & Spirlings P, N og W — bare afgjort af en model i stedet for af en liste. Plus et filter på ordklasse, som ingen af de syv operationer dækker.
+---
+`nlp(tekst)` kører én tekst igennem. `nlp.pipe(liste)` kører mange igennem.
 
-:::
+```python
+# én ad gangen
+doc = nlp("Vi søger en erfaren socialrådgiver.")
 
-## Prisen
+# mange ad gangen
+docs = nlp.pipe(["Vi søger ...", "Stillingen er ...", "Du skal ..."])
+```
 
-::: {.incremental}
+- docs er så en samling, vi kan løbe igennem.
+
+- batch_size er hvor mange den tager ad gangen. Jo større, des mere kræves der af hukommelsen. 
+
+## Konsekvensen
 
 - **Tid.** Reglerne kørte på sekunder. spaCy over 7.207 opslag tager minutter.
 
@@ -781,25 +730,11 @@ De fire betingelser i `if`-sætningen er præcis Denny & Spirlings P, N og W —
 
 - **Gennemsigtighed.** I kan læse jeres stopordsliste. I kan ikke læse en model.
 
-:::
-
-<br>
-
-::: {.incremental}
-
-Det er stadig næsten altid det rigtige valg. Men det er et valg — og det hører også i metodeafsnittet.
-
-:::
-
 # Del 5: Øvelser
 
 ## Øvelser
 
-<span class="timer" data-time="1200"></span>
-
 I får den rå fil, ikke den rensede.
-
-::: {.incremental}
 
 1. **Få filen ind.** Find separator, overskriftsrække og tegnsæt.
 
@@ -812,18 +747,6 @@ I får den rå fil, ikke den rensede.
 5. **Byg matricen.** Lav en document-term matrix og beregn dens sparsity.
 
 6. **spaCy.** Kør pipelinen på 200 opslag, og sammenlign vokabularet med regelversionen.
-
-:::
-
-## Litteratur
-
-**Denny, M. & Spirling, A.** (2017). Text Preprocessing for Unsupervised Learning: Why It Matters, When It Misleads, and What to Do about It. *SSRN*, s. 1-23. Særligt s. 1-13.
-
-**Hunston, S.** (2002). Methods in corpus linguistics: Beyond the concordance line. I: *Corpora in Applied Linguistics*, s. 79-95. Cambridge University Press.
-
-<br>
-
-**Supplerende:** Ledolter, J. & VanderVelde, L. (2022). Clustering of documents. I: *Analyzing Textual Information: From Words to Meanings Through Numbers*, s. 97-109. SAGE.
 
 **Dokumentation:** [spaCy 101](https://spacy.io/usage/spacy-101)
 

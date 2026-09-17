@@ -236,17 +236,22 @@ mkdir -p .qmd-pause && mv *.qmd .qmd-pause/ && \
 <p><br></p>
 
 <aside><div>
-<p>Ingen R-kode i dag. Vi arbejder med værktøjer, der ikke har en meningsfuld modsvarighed i webr.</p>
+<p>Ingen R-kode i disse slides. Vi arbejder med værktøjer, der ikke har en meningsfuld modsvarighed der kan køre i browseren (mig bekendt). Dog kan alt det I ser i dag, også gennemføres i R, med andre værktøjer.</p>
 </div></aside></section>
 <section id="dagens-data" class="slide level2">
 <h2>Dagens data</h2>
-<p>I sidste uge lærte I at hente data ned fra nettet. I dag arbejder vi med resultatet af den øvelse.</p>
-<p><strong>7.207 jobopslag</strong> fra fire jobportaler, indsamlet i uge 41-49 i 2023:</p>
-<p><code>job.aka.dk</code> · <code>jobbank.dk</code> · <code>Djof_Jobunivers</code> · <code>akademikerjob.dk</code></p>
-<p>Cirka <strong>4,5 millioner ord</strong>. Fire forskellige scrapere, fire forskellige måder at gøre det på.</p>
+<p>I sidste uge lærte I at hente data ned fra nettet. I dag arbejder vi med resultatet outputtet af sådanne en scraping.</p>
+<p>Eksempel data, scrapet på et tidligere tidspunkt:</p>
+<ul>
+<li><p><strong>7.207 jobopslag</strong> fra fire jobportaler, indsamlet i uge 41-49 i 2023:</p></li>
+<li><p><code>job.aka.dk</code>; <code>jobbank.dk</code>; <code>Djof_Jobunivers</code>; <code>akademikerjob.dk</code></p></li>
+<li><p>Cirka <strong>4,5 millioner ord</strong>. Fire forskellige scrapere, fire forskellige måder at gøre det på.</p></li>
+</ul>
 <p><br></p>
-<p>Målet i dag er ikke at analysere dem. Målet er at nå frem til en <strong>datastruktur</strong>, man kan analysere — næste gang med PCA og k-means.</p>
-</section>
+
+<aside><div>
+<p>Målet i dag er ikke at analysere dem. Målet er at nå frem til en <strong>datastruktur</strong>, man kan analysere. Næste gang analyserer vi med PCA og k-means.</p>
+</div></aside></section>
 <section>
 <section id="del-1-fra-scraper-til-tabel" class="title-slide slide level1 center">
 <h1>Del 1: Fra scraper til tabel</h1>
@@ -270,21 +275,22 @@ C error: Expected 1 fields in line 3, saw 3</code></pre>
 <p><strong>3. Tegnsættet er ikke UTF-8.</strong> <code>København</code> står i filen som <code>K?benhavn</code>.</p>
 <p><br></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a>opslag <span class="op">=</span> pd.read_csv(<span class="st">"jobapplications_fall-2023.csv"</span>,</span>
-<span id="cb3-2"><a href=""></a>                     sep<span class="op">=</span><span class="st">";"</span>, encoding<span class="op">=</span><span class="st">"mac_roman"</span>, skiprows<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Tre argumenter. Hver af dem svarer til én ting, en scraper gjorde for et år siden.</p>
+<span id="cb3-2"><a href=""></a>                     sep<span class="op">=</span><span class="st">";"</span>, encoding<span class="op">=</span><span class="st">"mac_roman"</span>, skiprows<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">7174</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="om-tegnsæt" class="slide level2">
-<h2>Om tegnsæt</h2>
-<p>En tekstfil er bytes. Tegnsættet er den <strong>aftale</strong> om, hvilket tegn hver byte betyder.</p>
-<p>Byten <code>0xBF</code> er <code>ø</code> i Mac Roman, <code>¿</code> i Latin-1 og ugyldig i UTF-8.</p>
-<p>Filen indeholder ingen oplysning om, hvilken aftale der gælder. Man gætter, indtil teksten ser rigtig ud.</p>
+<section id="kort-om-tegnsæt" class="slide level2">
+<h2>Kort om tegnsæt</h2>
+<ul>
+<li><p>En tekstfil er bytes. Tegnsættet er den <strong>aftale</strong> om, hvilket tegn hver byte betyder.</p></li>
+<li><p>Byten <code>0xBF</code> er <code>ø</code> i Mac Roman, <code>¿</code> i Latin-1 og ugyldig i UTF-8.</p></li>
+<li><p>Filen indeholder ingen oplysning om, hvilken aftale der gælder … man gætter typisk, indtil teksten ser rigtig ud.</p></li>
+</ul>
 <p><br></p>
 <blockquote>
 <p>Får I <code>Ã¸</code> eller <code>?</code> i stedet for <code>ø</code>, er det aldrig et problem med dataene. Det er et problem med, hvordan de bliver læst.</p>
 </blockquote>
 </section>
-<section id="så-virker-det" class="slide level2">
-<h2>Så virker det</h2>
+<section id="så-skulle-det-virke" class="slide level2">
+<h2>Så skulle det virke …</h2>
 <div class="cell" data-autorun="true">
 <div>
 <div id="pyodide-1" class="exercise-cell">
@@ -296,7 +302,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOnRydWUsImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiaW1w
 </div>
 </div>
 <p><br></p>
-<p>Et udsnit på 14 % af materialet, så det kan køre i browseren. Det fulde datasæt har 7.207 opslag.</p>
+<p>Et udsnit på ca. 10 % af materialet, så det kan køre i browseren. Det fulde datasæt har 7.207 opslag.</p>
 </section>
 <section id="hvad-er-der-i-tabellen" class="slide level2">
 <h2>Hvad er der i tabellen?</h2>
@@ -311,10 +317,12 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBy
 </div>
 </div>
 <p><br></p>
+<div class="fragment">
 <p><code>company</code> mangler for langt de fleste opslag. Men ikke tilfældigt — den findes for <strong>alle</strong> opslag fra jobbank.dk og for <strong>ingen</strong> fra de tre andre.</p>
+</div>
 </section>
-<section id="firmanavnet-er-ikke-væk" class="slide level2">
-<h2>Firmanavnet er ikke væk</h2>
+<section id="firmanavnet-eksisterer-dog-for-de-andre" class="slide level2">
+<h2>Firmanavnet eksisterer dog for de andre …</h2>
 <div class="cell" data-autorun="false">
 <div>
 <div id="pyodide-3" class="exercise-cell">
@@ -329,8 +337,8 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6IiMg
 <p>Det ligger i <code>various_meta1</code>, sammen med sted og dato, adskilt af linjeskift.</p>
 <p>Feltet er ikke data. Det er <strong>tekst, der indeholder data</strong>.</p>
 </section>
-<section id="hent-det-ud" class="slide level2">
-<h2>Hent det ud</h2>
+<section id="hent-dataen-ud-fra-strengen" class="slide level2">
+<h2>Hent dataen ud fra strengen</h2>
 <div class="cell" data-autorun="false">
 <div>
 <div id="pyodide-4" class="exercise-cell">
@@ -342,7 +350,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Imxp
 </div>
 </div>
 <p><br></p>
-<p><code>.split("\n")</code> er præcis den samme metode som i lektion 2 — bare med linjeskift som adskiller i stedet for mellemrum.</p>
+<p><code>.split("\n")</code> er præcis den samme metode som i lektion 2 … bare med linjeskift som adskiller i stedet for mellemrum.</p>
 </section>
 <section id="for-hele-kolonnen" class="slide level2">
 <h2>For hele kolonnen</h2>
@@ -357,16 +365,17 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Imhh
 </div>
 </div>
 <p><br></p>
-<p>De fleste felter har tre linjer: firma, sted, indrykningsdato.</p>
-<p>Men ikke alle. Nogle har to. Hvad er der sket der — og hvad sker der med jeres kode, hvis I bare tager <code>[0]</code>?</p>
+<ul>
+<li class="fragment"><p>De fleste felter har tre linjer: <code>firma, sted, indrykningsdato</code>.</p></li>
+<li class="fragment"><p>Men ikke alle. Nogle har to.</p></li>
+</ul>
 </section>
 <section id="til-diskussion" class="slide level2">
 <h2>Til diskussion</h2>
 <p><span class="timer" data-time="300"></span></p>
 <ul>
-<li class="fragment"><p>Fire scrapere har lagt data i felterne på fire måder. Hvem skal rydde op, og hvornår?</p></li>
-<li class="fragment"><p>Er det bedre at rette i data eller at skrive kode, der kan håndtere alle fire varianter?</p></li>
-<li class="fragment"><p>Hvad skal der stå i metodeafsnittet om, at 87 % af firmanavnene er hentet ud af et fritekstfelt?</p></li>
+<li><p>Fire scrapere har lagt data i felterne på fire måder.</p></li>
+<li><p>Er det bedre at rette i data (e.g., i Excel) eller at skrive kode, der kan håndtere alle fire varianter?</p></li>
 </ul>
 </section></section>
 <section>
@@ -393,12 +402,11 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InRl
 <h2>Tokens og typer</h2>
 <p>To ord, der bliver blandet sammen hele tiden:</p>
 <ul>
-<li class="fragment"><strong>Tokens</strong> er forekomster. Står <code>job</code> 400 gange, er det 400 tokens.</li>
-<li class="fragment"><strong>Typer</strong> er unikke ord. Så er <code>job</code> én type.</li>
+<li><strong>Tokens</strong> er forekomster. Står <code>job</code> 400 gange, er det 400 tokens.</li>
+<li><strong>Typer</strong> er unikke ord. Så er <code>job</code> én type.</li>
 </ul>
 <p><br></p>
-<p>Preprocessing gør to forskellige ting: nogle skridt fjerner mange <strong>tokens</strong>, andre fjerner mange <strong>typer</strong>. De to har vidt forskellige konsekvenser.</p>
-<p>Hold øje med begge tal på de næste slides.</p>
+<p>Preprocessing gør to forskellige ting: nogle trin fjerner mange <strong>tokens</strong>, andre fjerner mange <strong>typer</strong>. De to har vidt forskellige konsekvenser for analysen.</p>
 </section>
 <section id="de-syv-operationer" class="slide level2">
 <h2>De syv operationer</h2>
@@ -470,7 +478,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Imxv
 </div>
 </div>
 <p><br></p>
-<p>Ingen tokens forsvinder — men mange tusind typer gør.</p>
+<p>Ingen <strong>tokens</strong> forsvinder, men mange <strong>typer</strong> gør.</p>
 <p><code>Vi</code> og <code>vi</code> var to forskellige ord. Det var <code>København</code> og <code>københavn</code> også.</p>
 </section>
 <section id="p-tegnsætning" class="slide level2">
@@ -486,8 +494,10 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Imlt
 </div>
 </div>
 <p><br></p>
-<p>Det største enkeltspring i hele kæden. <code>job.</code>, <code>job,</code> og <code>job</code> var tre ord.</p>
-<p><code>.strip()</code> fjerner kun i enderne. <code>søger/finder</code> er stadig ét ord.</p>
+<ul>
+<li><p>Det største potentielle enkeltproblem i hele kæden. <code>job.</code>, <code>job,</code> og <code>job</code> var tre ord.</p></li>
+<li><p><code>.strip()</code> fjerner kun i enderne.</p></li>
+</ul>
 </section>
 <section id="n-tal" class="slide level2">
 <h2>N: tal</h2>
@@ -502,8 +512,22 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InVk
 </div>
 </div>
 <p><br></p>
-<p>I jobopslag er tal ofte lønninger, ansøgningsfrister, timetal og paragraffer.</p>
-<p>Er det støj, eller er det indhold? Det afhænger helt af spørgsmålet.</p>
+<ul>
+<li><p>I jobopslag kan tal være alt fra lønninger, ansøgningsfrister, timetal, paragraffer osv..</p></li>
+<li><p>Er det støj, eller er det indhold? Det afhænger helt af spørgsmålet.</p></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<pre><code>[o for o in uden_tegn if not any(c.isdigit() for c in o)]
+     ^                              ^
+     o = et ORD                     c = et TEGN i det ord</code></pre>
+<p><br> <br></p>
+<pre><code>for o in uden_tegn          for hvert ORD i listen
+    for c in o              kig på hvert TEGN i ordet
+        c.isdigit()         er tegnet et ciffer?
+    any(...)                var mindst ét af dem et ciffer?
+    if not ...              hvis nej: behold ordet</code></pre>
 </section>
 <section id="w-stopord" class="slide level2">
 <h2>W: stopord</h2>
@@ -518,8 +542,13 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InN0
 </div>
 </div>
 <p><br></p>
-<p>Her sker det modsatte af de foregående skridt. <strong>En tredjedel af alle tokens forsvinder</strong> — men vokabularet falder kun med antallet af ord på listen.</p>
-</section>
+<ul>
+<li class="fragment">Her sker det modsatte af de foregående skridt. <strong>En tredjedel af alle tokens forsvinder</strong> … men vokabularet falder kun med antallet af ord på listen.</li>
+</ul>
+
+<aside><div>
+<p><code>"""</code> er en streng, der må fylde flere linjer.</p>
+</div></aside></section>
 <section id="i-sjældne-ord" class="slide level2">
 <h2>I: sjældne ord</h2>
 <div class="cell" data-autorun="false">
@@ -533,7 +562,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6ImZy
 </div>
 </div>
 <p><br></p>
-<p>Nu falder vokabularet dramatisk, mens næsten alle tokens bliver.</p>
+<p>Nu falder <strong>vokabularet</strong> (typer) dramatisk, mens næsten alle tokens bliver.</p>
 </section>
 <section id="hele-kæden" class="slide level2">
 <h2>Hele kæden</h2>
@@ -584,37 +613,43 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6ImZy
 </section>
 <section id="to-slags-reduktion" class="slide level2">
 <h2>To slags reduktion</h2>
-<p><strong>Stopord</strong> fjerner 1,5 millioner tokens og 78 typer. Teksten bliver kortere; tabellen bliver ikke smallere.</p>
-<p><strong>Sjældne ord</strong> fjerner 70.000 typer og kun 3 % af tokens. Tabellen bliver meget smallere; teksten bliver næsten ikke kortere.</p>
+<ul>
+<li class="fragment"><p><strong>Stopord</strong> fjerner 1,5 millioner tokens og 78 typer. Teksten bliver kortere; tabellen bliver ikke smallere.</p></li>
+<li class="fragment"><p><strong>Sjældne ord</strong> fjerner 70.000 typer og kun 3 % af tokens. Tabellen bliver meget smallere; teksten bliver næsten ikke kortere.</p></li>
+</ul>
 <p><br></p>
-<p><strong>42.012 ord optræder i præcis ét dokument.</strong> En fjerdedel af hele vokabularet.</p>
-<p>De fylder en fjerdedel af tabellen og kan per definition ikke bruges til at sammenligne dokumenter.</p>
+<ul>
+<li><p><strong>42.012 ord optræder i præcis ét dokument.</strong> En fjerdedel af hele vokabularet.</p>
+<ul>
+<li>De fylder en fjerdedel af tabellen og kan per definition ikke bruges til at sammenligne dokumenter.</li>
+</ul></li>
+</ul>
 </section>
 <section id="denny-spirling-rækkefølgen-og-kombinationen" class="slide level2">
 <h2>Denny &amp; Spirling: rækkefølgen og kombinationen</h2>
 <p>Syv operationer, der hver kan slås til eller fra, giver <strong>2⁷ = 128</strong> forskellige feature-sæt af det samme materiale.</p>
 <p>Vi prøvede fire af dem på 2.000 opslag:</p>
-<pre><code>L=1 P=1 N=1 S=1  -&gt;  45.638 unikke ord
-L=1 P=0 N=0 S=0  -&gt;  71.241 unikke ord
-L=0 P=0 N=0 S=0  -&gt;  78.544 unikke ord</code></pre>
+<p><code>L=1 P=1 N=1 S=1</code> -&gt; 45.638 unikke ord <code>L=1 P=0 N=0 S=0</code> -&gt; 71.241 unikke ord <code>L=0 P=0 N=0 S=0</code> -&gt; 78.544 unikke ord</p>
 <p>Samme tekster. Vokabularet varierer med en faktor to.</p>
 </section>
-<section id="hvorfor-det-er-værre-for-usuperviserede-metoder" class="slide level2">
-<h2>Hvorfor det er værre for usuperviserede metoder</h2>
-<p>Ved <strong>klassifikation</strong> kan man måle sig frem: prøv kombinationerne, vælg den med den bedste accuracy. Der findes et facit.</p>
-<p>Ved <strong>klyngeanalyse og topic models</strong> findes der ikke noget facit. Ingen kan sige, om fire klynger er rigtigere end fem.</p>
+<section id="konsekvenser-for-usuperviserede-metoder" class="slide level2">
+<h2>Konsekvenser for usuperviserede metoder</h2>
+<ul>
+<li><p>Ved <strong>klassifikation</strong> kan man måle sig frem: prøv kombinationerne, vælg den med den bedste accuracy. <em>Der findes et facit.</em></p></li>
+<li><p>Ved <strong>klyngeanalyse og topic models</strong> findes der <em>ikke noget facit</em>. Ingen kan sige, om fire klynger er rigtigere end fem.</p></li>
+</ul>
 <p><br></p>
-<p>Preprocessing-råd kommer overvejende fra klassifikationslitteraturen og bliver overført ukritisk til det usuperviserede. Det er Denny &amp; Spirlings hovedanke.</p>
+<p>Preprocessing-råd kommer overvejende fra klassifikationslitteraturen og bliver overført ukritisk til det usuperviserede. <strong>Det er Denny &amp; Spirlings hovedanke.</strong></p>
 <blockquote>
-<p>Konsekvensen: jeres forbehandlingsvalg kan ændre konklusionen, uden at nogen kan opdage det.</p>
+<p>Konsekvensen: jeres preprocessingvalg kan ændre konklusionen, uden at nogen kan opdage det.</p>
 </blockquote>
 </section>
 <section id="hvad-man-så-gør" class="slide level2">
 <h2>Hvad man så gør</h2>
 <ul>
-<li class="fragment"><p><strong>Skriv alle valg ned.</strong> Hvert eneste. De hører i metodeafsnittet, ikke i en kommentar i koden.</p></li>
-<li class="fragment"><p><strong>Prøv flere kombinationer.</strong> Holder resultatet på tværs af dem, er det robust. Gør det ikke, er det et resultat om jeres forbehandling.</p></li>
-<li class="fragment"><p><strong>Denny &amp; Spirling foreslår <code>preText</code></strong>, som kører kombinationerne systematisk og måler, hvor meget de flytter resultatet.</p></li>
+<li><p><strong>Skriv alle valg ned.</strong> Hvert eneste. De hører i metodeafsnittet, ikke i en kommentar i koden.</p></li>
+<li><p><strong>Prøv flere kombinationer.</strong> Holder resultatet på tværs af dem, er det <strong>robust</strong>. Gør det ikke, er det et resultat om jeres forbehandling.</p></li>
+<li><p><strong>Denny &amp; Spirling foreslår <code>preText</code></strong>, som kører kombinationerne systematisk og måler, hvor meget de flytter resultatet.</p></li>
 </ul>
 </section></section>
 <section>
@@ -660,7 +695,7 @@ L=0 P=0 N=0 S=0  -&gt;  78.544 unikke ord</code></pre>
 </tbody>
 </table>
 <p><br></p>
-<p>Det er den struktur, PCA og k-means skal bruge. Hver række er et <strong>punkt i et rum</strong> med lige så mange dimensioner, som der er ord.</p>
+<p>Det er den struktur, <code>PCA</code> og <code>k-means</code> skal bruge. Hver række er et <strong>punkt i et rum</strong> med lige så mange dimensioner, som der er ord.</p>
 </section>
 <section id="sparsity" class="slide level2">
 <h2>Sparsity</h2>
@@ -675,29 +710,29 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Im5f
 </div>
 </div>
 <p><br></p>
-<p>Langt over 90 % af tabellen er nuller. Det er ikke en fejl — det er sådan sprog er. Intet dokument bruger mere end en brøkdel af vokabularet.</p>
+<p>Langt over 90 % af tabellen er nuller. Det er ikke en fejl … det er sådan sprog er. Intet dokument bruger mere end en brøkdel af vokabularet.</p>
 </section>
 <section id="hvorfor-sparsity-er-et-problem" class="slide level2">
 <h2>Hvorfor sparsity er et problem</h2>
 <ul>
-<li class="fragment"><p><strong>Afstande bliver meningsløse.</strong> To dokumenter uden fælles ord har samme afstand som to andre dokumenter uden fælles ord. I et 25.000-dimensionalt rum er næsten alt lige langt fra alt.</p></li>
-<li class="fragment"><p><strong>Modeller får for mange parametre</strong> i forhold til observationer.</p></li>
-<li class="fragment"><p><strong>Hukommelse.</strong> 7.207 × 24.804 er 179 millioner tal.</p></li>
+<li><p><strong>Afstande bliver meningsløse.</strong> To dokumenter uden fælles ord har samme afstand som to andre dokumenter uden fælles ord. I et 25.000-dimensionalt rum er næsten alt lige langt fra alt.</p></li>
+<li><p><strong>Modeller får for mange parametre</strong> i forhold til observationer.</p></li>
+<li><p><strong>Hukommelse.</strong> 7.207 × 24.804 er 179 millioner tal.</p></li>
 </ul>
 <p><br></p>
-<p>Det er derfor, næste skridt hedder dimensionalitetsreduktion — og derfor PCA kommer næste gang.</p>
-</section>
+
+<aside><div>
+<p>Det er derfor, vi har brug for <strong>dimensionalitetsreduktion</strong>.</p>
+</div></aside></section>
 <section id="hunston-hvad-man-kan-med-tællinger" class="slide level2">
 <h2>Hunston: hvad man kan med tællinger</h2>
 <p>Når først materialet er en tabel af optællinger, åbner der sig en række klassiske korpuslingvistiske greb:</p>
 <ul>
-<li class="fragment"><strong>Frekvenslister</strong> — hvad fylder mest, og fylder det mere end forventet?</li>
-<li class="fragment"><strong>Kollokation</strong> — hvilke ord optræder sammen oftere, end tilfældet ville give?</li>
-<li class="fragment"><strong>Nøgleord</strong> — hvilke ord er karakteristiske for ét delkorpus sammenlignet med et andet?</li>
-<li class="fragment"><strong>Konkordans</strong> — gå tilbage til teksten og se ordet i sin kontekst</li>
+<li><strong>Frekvenslister</strong>: hvad fylder mest, og fylder det mere end forventet?</li>
+<li><strong>Kollokation</strong>: hvilke ord optræder sammen oftere, end tilfældet ville give?</li>
+<li><strong>Nøgleord</strong>: hvilke ord er karakteristiske for ét delkorpus sammenlignet med et andet?</li>
+<li><strong>Konkordans</strong>: gå tilbage til teksten og se ordet i sin kontekst</li>
 </ul>
-<p><br></p>
-<p>Det sidste er det vigtigste. Tællingen fortæller, hvor man skal kigge. Den fortæller ikke, hvad man ser.</p>
 </section>
 <section id="frekvens-er-ikke-nok" class="slide level2">
 <h2>Frekvens er ikke nok</h2>
@@ -729,23 +764,11 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 </div>
 <p><br></p>
 <p>En dansk stopordsliste rører ikke ved engelske stopord. De bliver stående og dominerer optællingen.</p>
-<p>Ingen af Denny &amp; Spirlings syv operationer opdager det. Det er et <strong>korpusproblem</strong>, ikke et forbehandlingsproblem.</p>
-<p><br></p>
 <blockquote>
-<p>Hvad gør I? Frasortér dem, oversæt dem, analysér dem hver for sig — eller lad være at bruge frekvens?</p>
+<p>Hvad gør I? Frasortér dem, oversæt dem, analysér dem hver for sig?</p>
 </blockquote>
-<section id="og-de-domænespecifikke-ord" class="slide level2">
-<h2>Og de domænespecifikke ord</h2>
-<p>Ser man bort fra de engelske, står <code>arbejde</code>, <code>stillingen</code>, <code>samt</code>, <code>erfaring</code> og <code>opgaver</code> tilbage.</p>
-<p>Det er ord, der står i næsten alle jobopslag, <strong>netop fordi de er jobopslag</strong>. De skiller ikke ét opslag fra et andet.</p>
-<p>En generel stopordsliste fanger dem ikke. Man er nødt til at kigge på sit eget materiale og selv beslutte.</p>
-</section>
-<section id="nøgleord-i-stedet" class="slide level2">
-<h2>Nøgleord i stedet</h2>
-<p>Idéen er at sammenligne to delkorpora i stedet for at kigge på ét.</p>
-<p>Hvilke ord er karakteristiske for <code>job.aka.dk</code> sammenlignet med <code>jobbank.dk</code>? Det er et andet spørgsmål end “hvilke ord er hyppigst”, og det giver et helt andet svar.</p>
-<p>Samme logik ligger bag tf-idf, som vægter et ord op, hvis det er hyppigt i ét dokument og sjældent i resten.</p>
-</section>
+</section></section>
+<section>
 <section id="del-4-spacy" class="title-slide slide level1 center">
 <h1>Del 4: spaCy</h1>
 
@@ -753,40 +776,71 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <section id="regler-eller-sprogmodel" class="slide level2">
 <h2>Regler eller sprogmodel</h2>
 <p>Alt, hvad vi har lavet indtil nu, er <strong>regler</strong>: fjern disse tegn, fjern disse ord, klip enderne af.</p>
-<p>En sprogmodel gør noget andet. Den er trænet på store mængder tekst og afgør ud fra <strong>konteksten</strong>, hvad hvert ord er.</p>
-<p><code>spaCy</code> giver tokenisering, lemmatisering, ordklasser og navngivne entiteter — også for dansk.</p>
+<p><br></p>
+<ul>
+<li><p>En sprogmodel gør noget andet. Den er trænet på store mængder tekst og afgør ud fra <strong>konteksten</strong>, hvad hvert ord er.</p></li>
+<li><p><code>spaCy</code> giver tokenisering, lemmatisering, ordklasser og navngivne entiteter … også for dansk sprog.</p></li>
+</ul>
 <p><br></p>
 
-</section>
+<aside><div>
+<p>spaCy indeholder kompileret kode og kan ikke køre i browseren. Koden herunder skal køres i UCloud eller lokalt.</p>
+</div></aside></section>
 <section id="pipelinen" class="slide level2">
 <h2>Pipelinen</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="im">import</span> spacy</span>
-<span id="cb5-2"><a href=""></a></span>
-<span id="cb5-3"><a href=""></a>nlp <span class="op">=</span> spacy.load(<span class="st">"da_core_news_sm"</span>)</span>
-<span id="cb5-4"><a href=""></a>doc <span class="op">=</span> nlp(<span class="st">"Vi søger en erfaren socialrådgiver til vores team i Aarhus."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="im">import</span> spacy</span>
+<span id="cb6-2"><a href=""></a></span>
+<span id="cb6-3"><a href=""></a>nlp <span class="op">=</span> spacy.load(<span class="st">"da_core_news_sm"</span>)</span>
+<span id="cb6-4"><a href=""></a></span>
+<span id="cb6-5"><a href=""></a>mikro <span class="op">=</span> [</span>
+<span id="cb6-6"><a href=""></a>    <span class="st">"Vi søger en erfaren socialrådgiver til vores team i Aarhus."</span>,</span>
+<span id="cb6-7"><a href=""></a>    <span class="st">"Stillingen er en fast stilling på 37 timer om ugen."</span>,</span>
+<span id="cb6-8"><a href=""></a>    <span class="st">"Du skal være uddannet cand.jur. og have mindst tre års erfaring."</span>,</span>
+<span id="cb6-9"><a href=""></a>    <span class="st">"Sekretariatet har kontor ved Nørreport Station i København."</span>,</span>
+<span id="cb6-10"><a href=""></a>    <span class="st">"Vi søgte sidste år en projektleder, og vi søger igen i 2024."</span>,</span>
+<span id="cb6-11"><a href=""></a>    <span class="st">"Regionen tilbyder et godt arbejdsmiljø og gode udviklingsmuligheder."</span>,</span>
+<span id="cb6-12"><a href=""></a>    <span class="st">"Ansøgningsfristen er den 12. november 2023 — send den via linket."</span>,</span>
+<span id="cb6-13"><a href=""></a>    <span class="st">"We are looking for a senior consultant to join our team in Esbjerg."</span>,</span>
+<span id="cb6-14"><a href=""></a>]</span>
+<span id="cb6-15"><a href=""></a></span>
+<span id="cb6-16"><a href=""></a>doc <span class="op">=</span> nlp(mikro[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
-<p><code>spacy.load()</code> henter en <strong>model</strong>, ikke bare en funktion. Teksten løber gennem en række trin, som hver tilføjer et lag information:</p>
-<pre><code>tekst → tokenizer → tagger → lemmatizer → parser → ner → doc</code></pre>
-<p>Resultatet er ikke en liste af strenge, men et objekt, hvor hvert ord kender sin egen grundform, ordklasse og rolle i sætningen.</p>
+<ul>
+<li><p><code>spacy.load()</code> henter en <strong>model</strong>, ikke bare en funktion. Teksten løber gennem en række trin, som hver tilføjer et lag information:</p></li>
+<li><p>Resultatet er ikke en liste af strenge, men et objekt, hvor hvert ord kender sin egen grundform, ordklasse og rolle i sætningen.</p></li>
+</ul>
+</section>
+<section class="slide level2">
+
+
+<img data-src="resources/pipeline-design.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section class="slide level2">
+
+<p>[KONCEPTUELT OM SPACY; HVORDAN TRÆNET]</p>
 </section>
 <section id="lemmatisering-i-stedet-for-stemming" class="slide level2">
 <h2>Lemmatisering i stedet for stemming</h2>
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="cf">for</span> tok <span class="kw">in</span> doc:</span>
 <span id="cb7-2"><a href=""></a>    <span class="bu">print</span>(tok.text, tok.lemma_, tok.pos_, tok.is_stop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
-<p><strong>Stemming</strong> klipper enderne af efter en regel. <code>universitet</code> og <code>universel</code> kan ende samme sted.</p>
-<p><strong>Lemmatisering</strong> slår grundformen op i en model, der kender sproget. <code>søger</code>, <code>søgte</code> og <code>søgt</code> bliver alle til <code>søge</code> — og <code>universel</code> bliver ved med at være <code>universel</code>.</p>
+<ul>
+<li><p><strong>Stemming</strong> klipper enderne af efter en regel. <code>universitet</code> og <code>universel</code> kan ende samme sted.</p></li>
+<li><p><strong>Lemmatisering</strong> slår grundformen op i en model, der kender sproget. <code>søger</code>, <code>søgte</code> og <code>søgt</code> bliver alle til <code>søge</code>, og <code>universel</code> bliver ved med at være <code>universel</code>.</p></li>
+</ul>
 <p><br></p>
-<p><code>tok.is_stop</code> er en færdig stopordsliste. Den I selv skrev i lektion 2 var på 78 ord. Den her er lavet af folk, der arbejder med dansk.</p>
+<p><code>tok.is_stop</code> er en færdig stopordsliste. Den I selv har skrevet var på 78 ord. Den her er lavet af folk, der arbejder med området.</p>
 </section>
 <section id="ordklasser-som-filter" class="slide level2">
 <h2>Ordklasser som filter</h2>
 <div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a>navneord <span class="op">=</span> [tok.lemma_ <span class="cf">for</span> tok <span class="kw">in</span> doc</span>
-<span id="cb8-2"><a href=""></a>            <span class="cf">if</span> tok.pos_ <span class="kw">in</span> (<span class="st">"NOUN"</span>, <span class="st">"PROPN"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-2"><a href=""></a>            <span class="cf">if</span> tok.pos_ <span class="kw">in</span> (<span class="st">"NOUN"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
-<p>I stedet for at fjerne ord fra en liste, kan I <strong>beholde</strong> en ordklasse.</p>
-<p>I jobopslag ligger indholdet i navneordene: kompetencer, fag, steder, titler. Udsagnsordene er stort set de samme i alle opslag: <em>søger, tilbyder, forventer</em>.</p>
-<p>Det er en helt anden slags dimensionalitetsreduktion end en stopordsliste — og den er begrundet i sproget frem for i en liste, nogen har skrevet.</p>
+<p>I stedet for at fjerne ord fra en liste, kan I <strong>beholde</strong> specifikke ordklasser.</p>
+<p><br></p>
+<ul>
+<li><p>I jobopslag ligger indholdet i <strong>navneordene</strong>: kompetencer, fag, steder, titler. <strong>Udsagnsordene</strong> er stort set de samme i alle opslag: <em>søger, tilbyder, forventer</em>.</p></li>
+<li><p>Det er en helt anden slags dimensionalitetsreduktion end en stopordsliste og den er begrundet i sproget frem for i en liste, nogen har skrevet.</p></li>
+</ul>
 </section>
 <section id="hele-korpusset" class="slide level2">
 <h2>Hele korpusset</h2>
@@ -800,20 +854,33 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <span id="cb9-8"><a href=""></a>                   <span class="kw">and</span> <span class="kw">not</span> tok.like_num</span>
 <span id="cb9-9"><a href=""></a>                   <span class="kw">and</span> tok.pos_ <span class="kw">in</span> (<span class="st">"NOUN"</span>, <span class="st">"PROPN"</span>, <span class="st">"ADJ"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
-<p><code>nlp.pipe()</code> kører mange tekster igennem ad gangen og er langt hurtigere end en løkke med <code>nlp(t)</code>.</p>
-<p>De fire betingelser i <code>if</code>-sætningen er præcis Denny &amp; Spirlings P, N og W — bare afgjort af en model i stedet for af en liste. Plus et filter på ordklasse, som ingen af de syv operationer dækker.</p>
-</section>
-<section id="prisen" class="slide level2">
-<h2>Prisen</h2>
 <ul>
-<li class="fragment"><p><strong>Tid.</strong> Reglerne kørte på sekunder. spaCy over 7.207 opslag tager minutter.</p></li>
-<li class="fragment"><p><strong>Sproget.</strong> Modellen er trænet på dansk nyhedstekst. Jobopslag er ikke nyhedstekst.</p></li>
-<li class="fragment"><p><strong>Gennemsigtighed.</strong> I kan læse jeres stopordsliste. I kan ikke læse en model.</p></li>
+<li><p><code>nlp.pipe()</code> kører mange tekster igennem ad gangen og er langt hurtigere end en løkke med <code>nlp(t)</code>.</p></li>
+<li><p>De fire betingelser i <code>if</code>-sætningen er præcis Denny &amp; Spirlings P, N og W, bare bestemt ud fra en model i stedet for af en liste. Plus et filter på ordklasse, som ingen af de syv operationer dækker.</p></li>
 </ul>
-<p><br></p>
-<p>Det er stadig næsten altid det rigtige valg. Men det er et valg — og det hører også i metodeafsnittet.</p>
 </section>
+<section class="slide level2">
 
+<p><code>nlp(tekst)</code> kører én tekst igennem. <code>nlp.pipe(liste)</code> kører mange igennem.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href=""></a><span class="co"># én ad gangen</span></span>
+<span id="cb10-2"><a href=""></a>doc <span class="op">=</span> nlp(<span class="st">"Vi søger en erfaren socialrådgiver."</span>)</span>
+<span id="cb10-3"><a href=""></a></span>
+<span id="cb10-4"><a href=""></a><span class="co"># mange ad gangen</span></span>
+<span id="cb10-5"><a href=""></a>docs <span class="op">=</span> nlp.pipe([<span class="st">"Vi søger ..."</span>, <span class="st">"Stillingen er ..."</span>, <span class="st">"Du skal ..."</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li><p>docs er så en samling, vi kan løbe igennem.</p></li>
+<li><p>batch_size er hvor mange den tager ad gangen. Jo større, des mere kræves der af hukommelsen.</p></li>
+</ul>
+</section>
+<section id="konsekvensen" class="slide level2">
+<h2>Konsekvensen</h2>
+<ul>
+<li><p><strong>Tid.</strong> Reglerne kørte på sekunder. spaCy over 7.207 opslag tager minutter.</p></li>
+<li><p><strong>Sproget.</strong> Modellen er trænet på dansk nyhedstekst. Jobopslag er ikke nyhedstekst.</p></li>
+<li><p><strong>Gennemsigtighed.</strong> I kan læse jeres stopordsliste. I kan ikke læse en model.</p></li>
+</ul>
+</section></section>
+<section>
 <section id="del-5-øvelser" class="title-slide slide level1 center">
 <h1>Del 5: Øvelser</h1>
 
@@ -823,23 +890,14 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <p><span class="timer" data-time="1200"></span></p>
 <p>I får den rå fil, ikke den rensede.</p>
 <ol type="1">
-<li class="fragment"><p><strong>Få filen ind.</strong> Find separator, overskriftsrække og tegnsæt.</p></li>
-<li class="fragment"><p><strong>Hent metadata ud.</strong> Firma, sted og dato ligger i et fritekstfelt. Håndtér de opslag, hvor det ikke passer.</p></li>
-<li class="fragment"><p><strong>Byg kæden.</strong> Kør de fem trin, og skriv tokens og typer ned efter hvert.</p></li>
-<li class="fragment"><p><strong>Skift rækkefølge.</strong> Fjern stopord før små bogstaver. Får I det samme?</p></li>
-<li class="fragment"><p><strong>Byg matricen.</strong> Lav en document-term matrix og beregn dens sparsity.</p></li>
-<li class="fragment"><p><strong>spaCy.</strong> Kør pipelinen på 200 opslag, og sammenlign vokabularet med regelversionen.</p></li>
+<li><p><strong>Få filen ind.</strong> Find separator, overskriftsrække og tegnsæt.</p></li>
+<li><p><strong>Hent metadata ud.</strong> Firma, sted og dato ligger i et fritekstfelt. Håndtér de opslag, hvor det ikke passer.</p></li>
+<li><p><strong>Byg kæden.</strong> Kør de fem trin, og skriv tokens og typer ned efter hvert.</p></li>
+<li><p><strong>Skift rækkefølge.</strong> Fjern stopord før små bogstaver. Får I det samme?</p></li>
+<li><p><strong>Byg matricen.</strong> Lav en document-term matrix og beregn dens sparsity.</p></li>
+<li><p><strong>spaCy.</strong> Kør pipelinen på 200 opslag, og sammenlign vokabularet med regelversionen.</p></li>
 </ol>
-</section>
-<section id="litteratur" class="slide level2">
-<h2>Litteratur</h2>
-<p><strong>Denny, M. &amp; Spirling, A.</strong> (2017). Text Preprocessing for Unsupervised Learning: Why It Matters, When It Misleads, and What to Do about It. <em>SSRN</em>, s. 1-23. Særligt s. 1-13.</p>
-<p><strong>Hunston, S.</strong> (2002). Methods in corpus linguistics: Beyond the concordance line. I: <em>Corpora in Applied Linguistics</em>, s. 79-95. Cambridge University Press.</p>
-<p><br></p>
-<p><strong>Supplerende:</strong> Ledolter, J. &amp; VanderVelde, L. (2022). Clustering of documents. I: <em>Analyzing Textual Information: From Words to Meanings Through Numbers</em>, s. 97-109. SAGE.</p>
 <p><strong>Dokumentation:</strong> <a href="https://spacy.io/usage/spacy-101">spaCy 101</a></p>
-
-</section>
 
 <script type="pyodide-data">
 eyJvcHRpb25zIjp7ImVudiI6eyJQTE9UTFlfUkVOREVSRVIiOiJwbG90bHlfbWltZXR5cGUifSwiaW5kZXhVUkwiOiJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvcHlvZGlkZS92MC4yOC4xL2Z1bGwvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsicHlvZGlkZV9odHRwIiwibWljcm9waXAiLCJpcHl0aG9uIiwicGFuZGFzIiwibWF0cGxvdGxpYiIsInBsb3RuaW5lIl19fQ==
@@ -858,9 +916,7 @@ eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJweW9kaWRlLTE0IiwiaW5saW5lIjpmYWxzZSwibWV0aG9k
 <script type="vfs-file">
 W10=
 </script>
-<aside><div>
-<p>spaCy indeholder kompileret kode og kan ikke køre i browseren. Koden herunder skal køres i UCloud eller lokalt.</p>
-</div></aside></section></section>
+</section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
