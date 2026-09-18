@@ -48,7 +48,7 @@ mkdir -p .qmd-pause && mv *.qmd .qmd-pause/ && \
 <br>
 
 ::: {.aside}
-Ingen R-kode i disse slides. Vi arbejder med værktøjer, der ikke har en meningsfuld modsvarighed der kan køre i browseren (mig bekendt). Dog kan alt det I ser i dag, også gennemføres i R, med andre værktøjer. 
+Ingen R-kode i disse slides. Vi arbejder med værktøjer, der ikke har et meningsfuldt alternativt i R, der kan køre i browseren (mig bekendt). Dog kan alt det I ser i dag, også gennemføres i R lokalt og med andre værktøjer. 
 :::
 
 ## Dagens data
@@ -101,9 +101,11 @@ Tre ting er galt med filen, og `read_csv` fortæller kun om den ene ad gangen.
 
 ::: {.incremental}
 
-**1. Separatoren er semikolon.** Dansk Excel bruger `;`, fordi kommaet er decimaltegn.
+**1. Separatoren er semikolon.** Dansk Excel bruger `;`, ikke `,`
 
-**2. Første linje er falsk.** Der står `Column1;Column2;...`. Den rigtige overskrift står på linje to.
+**2. Første linje er forkert.** Der står `Column1;Column2;...`. Den rigtige overskrift står på linje to.
+
+**2.1. Der er en fejl i dataen på linje 7174.**
 
 **3. Tegnsættet er ikke UTF-8.** `København` står i filen som `K?benhavn`.
 
@@ -128,11 +130,11 @@ opslag = pd.read_csv("jobapplications_fall-2023.csv",
 
 ::: {.incremental}
 
-> Får I `Ã¸` eller `?` i stedet for `ø`, er det aldrig et problem med dataene. Det er et problem med, hvordan de bliver læst.
+> Får I `Ã¸` eller `?` i stedet for `ø`, er det som udgangspunkt aldrig et problem med dataene. Det er et problem med, hvordan de bliver læst.
 
 :::
 
-## Så skulle det virke ... 
+## Et udsnit af daten indlæst ... 
 
 ```{pyodide}
 #| autorun: true
@@ -162,7 +164,7 @@ print(opslag.isna().sum())
 
 ::: {.fragment}
 
-`company` mangler for langt de fleste opslag. Men ikke tilfældigt — den findes for **alle** opslag fra jobbank.dk og for **ingen** fra de tre andre.
+`company` mangler for langt de fleste opslag. Men ikke tilfældigt! Den findes for **alle** opslag fra jobbank.dk og for **ingen** fra de tre andre.
 
 :::
 
@@ -237,10 +239,11 @@ print(dele.str.len().value_counts())
 #| autorun: false
 tekster = opslag["job_description"].astype(str)
 
-alle_ord = [o for t in tekster for o in t.split()]
+# ét ord per række. Indekset husker, hvilket opslag ordet kom fra
+ord = tekster.str.split().explode()
 
-print("Tokens i alt:", len(alle_ord))
-print("Unikke ord:  ", len(set(alle_ord)))
+print("Tokens i alt:", len(ord))
+print("Unikke ord:  ", ord.nunique())
 ```
 
 <br>
@@ -273,7 +276,7 @@ Denny & Spirling (2017) opstiller syv, som næsten alle bruger:
 | | Operation | Hvad det koster |
 |---|---|---|
 | **P** | Fjern tegnsætning | Hashtags og forkortelser går tabt |
-| **N** | Fjern tal | "§ 17" og "2024" kan være indholdet |
+| **N** | Fjern tal | "§ 17" og "2024" kan være indhold |
 | **L** | Små bogstaver | `Rose` (navn) og `rose` (blomst) smelter sammen |
 | **S** | Stemming | `universitet` og `universel` kan ende samme sted |
 | **W** | Fjern stopord | Der findes ingen facitliste |
@@ -292,10 +295,10 @@ Ingen af dem er neutrale. Hver enkelt er et valg om, hvad der tæller som "det s
 
 ```{pyodide}
 #| autorun: false
-lower = [o.lower() for o in alle_ord]
+ord = ord.str.lower()
 
-print("Tokens: ", len(lower))
-print("Typer:  ", len(set(lower)))
+print("Tokens: ", len(ord))
+print("Typer:  ", ord.nunique())
 ```
 
 <br>
@@ -311,11 +314,11 @@ Ingen **tokens** forsvinder, men mange **typer** gør.
 import string
 tegn = string.punctuation + "«»…–—"
 
-uden_tegn = [o.strip(tegn) for o in lower]
-uden_tegn = [o for o in uden_tegn if o]
+ord = ord.str.strip(tegn)
+ord = ord[ord != ""]            # nogle ord var kun tegnsætning
 
-print("Tokens: ", len(uden_tegn))
-print("Typer:  ", len(set(uden_tegn)))
+print("Tokens: ", len(ord))
+print("Typer:  ", ord.nunique())
 ```
 
 <br>
@@ -328,10 +331,10 @@ print("Typer:  ", len(set(uden_tegn)))
 
 ```{pyodide}
 #| autorun: false
-uden_tal = [o for o in uden_tegn if not any(c.isdigit() for c in o)]
+ord = ord[~ord.str.contains(r"\d")]     # \d betyder "et ciffer"
 
-print("Tokens: ", len(uden_tal))
-print("Typer:  ", len(set(uden_tal)))
+print("Tokens: ", len(ord))
+print("Typer:  ", ord.nunique())
 ```
 
 <br>
@@ -339,25 +342,6 @@ print("Typer:  ", len(set(uden_tal)))
 - I jobopslag kan tal være alt fra lønninger, ansøgningsfrister, timetal, paragraffer osv..
 
 - Er det støj, eller er det indhold? Det afhænger helt af spørgsmålet.
-
----
-
-```
-[o for o in uden_tegn if not any(c.isdigit() for c in o)]
-     ^                              ^
-     o = et ORD                     c = et TEGN i det ord
-```
-
-<br>
-<br>
-
-```
-for o in uden_tegn          for hvert ORD i listen
-    for c in o              kig på hvert TEGN i ordet
-        c.isdigit()         er tegnet et ciffer?
-    any(...)                var mindst ét af dem et ciffer?
-    if not ...              hvis nej: behold ordet
-```
 
 ## W: stopord
 
@@ -369,19 +353,15 @@ dem os op man hans hvor eller hvad skal selv her alle vil blev kunne ind når
 være dog jo dette dig deres end mit også under have dens hvis dine disse
 hvem vores jer sådan andre nogle bliver blive kan""".split())
 
-uden_stop = [o for o in uden_tal if o not in stopord]
+ord = ord[~ord.isin(stopord)]
 
-print("Tokens: ", len(uden_stop))
-print("Typer:  ", len(set(uden_stop)))
+print("Tokens: ", len(ord))
+print("Typer:  ", ord.nunique())
 ```
 
 <br>
 
-::: {.incremental}
-
-- Her sker det modsatte af de foregående skridt. **En tredjedel af alle tokens forsvinder** ... men vokabularet falder kun med antallet af ord på listen.
-
-:::
+Her sker det modsatte af de foregående skridt. **En tredjedel af alle tokens forsvinder** ... men vokabularet falder kun med antallet af ord på listen.
 
 ::: {.aside}
 `"""` er en streng, der må fylde flere linjer.
@@ -391,18 +371,15 @@ print("Typer:  ", len(set(uden_stop)))
 
 ```{pyodide}
 #| autorun: false
-from collections import Counter
+# ét ord per dokument: drop gengangere inden for samme opslag
+par = ord.rename("ord").reset_index().drop_duplicates()
+dok_frekvens = par["ord"].value_counts()
 
-dokument_frekvens = Counter()
-for t in tekster:
-    ord_i_dok = {o.strip(tegn).lower() for o in t.split()}
-    dokument_frekvens.update(o for o in ord_i_dok if o and o not in stopord)
+hyppige = dok_frekvens[dok_frekvens >= 5].index
+ord = ord[ord.isin(hyppige)]
 
-hyppige = {o for o, n in dokument_frekvens.items() if n >= 5}
-beskaaret = [o for o in uden_stop if o in hyppige]
-
-print("Tokens: ", len(beskaaret))
-print("Typer:  ", len(set(beskaaret)))
+print("Tokens: ", len(ord))
+print("Typer:  ", ord.nunique())
 ```
 
 <br>
@@ -421,33 +398,29 @@ Tallene her er fra det **fulde** materiale på 7.207 opslag.
 |---|---:|---:|
 | Råt `.split()` | 4.546.976 | 174.336 |
 | + små bogstaver | 4.546.976 | 157.174 |
-| + fjern tegnsætning | 4.527.249 | 104.043 |
-| + fjern tal | 4.440.382 | 95.524 |
-| + fjern stopord | 2.967.208 | 95.446 |
-| + fjern sjældne (df < 5) | 2.826.672 | **24.804** |
+| + fjern tegnsætning | 4.529.235 | 105.610 |
+| + fjern tal | 4.442.368 | 97.076 |
+| + fjern stopord | 2.969.611 | 96.998 |
+| + fjern sjældne (df < 5) | 2.827.026 | **24.876** |
 
 <br>
 
 ::: {.incremental}
 
-**86 % af vokabularet væk. 62 % af tokens tilbage.** Det er dimensionalitetsreduktion.
+**86 % af vokabularet væk. 62 % af tokens tilbage.** Det er `dimensionalitetsreduktion`.
 
 :::
 
 ## To slags reduktion
 
-::: {.incremental}
-
 - **Stopord** fjerner 1,5 millioner tokens og 78 typer. Teksten bliver kortere; tabellen bliver ikke smallere.
 
-- **Sjældne ord** fjerner 70.000 typer og kun 3 % af tokens. Tabellen bliver meget smallere; teksten bliver næsten ikke kortere.
-
-:::
+- **Sjældne ord** fjerner 72.000 typer og kun 3 % af tokens. Tabellen bliver meget smallere; teksten bliver næsten ikke kortere.
 
 <br>
 
 
-- **42.012 ord optræder i præcis ét dokument.** En fjerdedel af hele vokabularet.
+- **43.082 tokens (ord/tegn) optræder i præcis ét dokument.** En fjerdedel af hele vokabularet.
 
   - De fylder en fjerdedel af tabellen og kan per definition ikke bruges til at sammenligne dokumenter.
 
@@ -455,40 +428,35 @@ Tallene her er fra det **fulde** materiale på 7.207 opslag.
 
 Syv operationer, der hver kan slås til eller fra, giver **2⁷ = 128** forskellige feature-sæt af det samme materiale.
 
-::: {.incremental}
-
 Vi prøvede fire af dem på 2.000 opslag:
 
+- `L=1 P=1 N=1 S=1`  ->  45.638 unikke ord
 
+- `L=1 P=0 N=0 S=0`  ->  71.241 unikke ord
 
-`L=1 P=1 N=1 S=1`  ->  45.638 unikke ord
-`L=1 P=0 N=0 S=0`  ->  71.241 unikke ord
-`L=0 P=0 N=0 S=0`  ->  78.544 unikke ord
-
+- `L=0 P=0 N=0 S=0`  ->  78.544 unikke ord
 
 Samme tekster. Vokabularet varierer med en faktor to.
 
-:::
-
-## Konsekvenser for usuperviserede metoder
+## Konsekvenser afhænger af metode(r)
 
 - Ved **klassifikation** kan man måle sig frem: prøv kombinationerne, vælg den med den bedste accuracy. *Der findes et facit.*
 
-- Ved **klyngeanalyse og topic models** findes der *ikke noget facit*. Ingen kan sige, om fire klynger er rigtigere end fem.
+- Ved **klyngeanalyse og topic models** findes der *ikke noget facit*. Ingen kan endegyldigt sige, om fire klynger er rigtigere end fem.
 
 <br>
 
 Preprocessing-råd kommer overvejende fra klassifikationslitteraturen og bliver overført ukritisk til det usuperviserede. **Det er Denny & Spirlings hovedanke.**
 
-> Konsekvensen: jeres preprocessingvalg kan ændre konklusionen, uden at nogen kan opdage det.
+> Altså, jeres preprocessingvalg kan ændre konklusionen, uden at nogen kan opdage det.
 
 ## Hvad man så gør
 
-- **Skriv alle valg ned.** Hvert eneste. De hører i metodeafsnittet, ikke i en kommentar i koden.
+- **Skriv alle valg ned.** De hører i metodeafsnittet, ikke i en kommentar i koden.
 
-- **Prøv flere kombinationer.** Holder resultatet på tværs af dem, er det **robust**. Gør det ikke, er det et resultat om jeres forbehandling.
+- **Prøv flere kombinationer.** Holder resultatet på tværs af dem, er det **robust**.
 
-- **Denny & Spirling foreslår `preText`**, som kører kombinationerne systematisk og måler, hvor meget de flytter resultatet.
+- **Denny & Spirling foreslag `preText`**, handler om at køre kombinationerne systematisk og måle, hvor meget de flytter resultatet.
 
 # Del 3: Datastrukturen
 
@@ -514,16 +482,12 @@ Det er den struktur, `PCA` og `k-means` skal bruge. Hver række er et **punkt i 
 
 ```{pyodide}
 #| autorun: false
-n_dok = len(tekster)
-n_ord = len(hyppige)
+# crosstab tæller, hvor mange gange hvert ord står i hvert dokument
+dtm = pd.crosstab(ord.index, ord)
 
-celler = n_dok * n_ord
-udfyldte = sum(len({o.strip(tegn).lower() for o in t.split()} & hyppige)
-               for t in tekster)
-
-print("Matrix:  ", n_dok, "x", n_ord, "=", celler, "celler")
-print("Ikke-nul:", udfyldte)
-print("Sparsity:", round((1 - udfyldte / celler) * 100, 2), "%")
+print("Matrix:  ", dtm.shape)
+print("Ikke-nul:", (dtm != 0).to_numpy().sum())
+print("Sparsity:", round((dtm == 0).to_numpy().mean() * 100, 2), "%")
 ```
 
 <br>
@@ -550,6 +514,8 @@ Det er derfor, vi har brug for **dimensionalitetsreduktion**.
 
 :::
 
+# Tabeller giver mulighed for analyse
+
 ## Hunston: hvad man kan med tællinger
 
 Når først materialet er en tabel af optællinger, åbner der sig en række klassiske korpuslingvistiske greb:
@@ -563,17 +529,12 @@ Når først materialet er en tabel af optællinger, åbner der sig en række kla
 
 ```{pyodide}
 #| autorun: false
-tael = Counter(beskaaret)
-
-for ord, n in tael.most_common(15):
-    print(f"{ord:20} {n}")
+print(ord.value_counts().head(15))
 ```
 
 <br>
 
 ::: {.incremental}
-
-Kig på listen, før I læser videre.
 
 De hyppigste ord er `and`, `the`, `of`, `to`, `in`. Korpusset er ikke kun på dansk.
 
@@ -595,11 +556,15 @@ En dansk stopordsliste rører ikke ved engelske stopord. De bliver stående og d
 
 > Hvad gør I? Frasortér dem, oversæt dem, analysér dem hver for sig?
 
+## [MERE? EN AFRUNDING?]
+
+[MERE? EN AFRUNDING?]
+
 # Del 4: spaCy
 
 ## Regler eller sprogmodel
 
-Alt, hvad vi har lavet indtil nu, er **regler**: fjern disse tegn, fjern disse ord, klip enderne af.
+Alt, hvad vi har lavet indtil nu, er **regler**: *fjern disse tegn, fjern disse ord, klip enderne af.*
 
 <br>
 
@@ -611,7 +576,7 @@ Alt, hvad vi har lavet indtil nu, er **regler**: fjern disse tegn, fjern disse o
 <br>
 
 ::: {.aside}
-spaCy indeholder kompileret kode og kan ikke køre i browseren. Koden herunder skal køres i UCloud eller lokalt.
+spaCy kan ikke køre i browseren. Den efterfølgende kode skal køres i UCloud eller lokalt.
 :::
 
 ## Pipelinen
@@ -637,15 +602,15 @@ doc = nlp(mikro[0])
 
 <br>
 
-- `spacy.load()` henter en **model**, ikke bare en funktion. Teksten løber gennem en række trin, som hver tilføjer et lag information:
+- `spacy.load()` henter en **model**, ikke bare en funktion. Teksten løber gennem en række trin, som hver tilføjer et lag information.
 
-- Resultatet er ikke en liste af strenge, men et objekt, hvor hvert ord kender sin egen grundform, ordklasse og rolle i sætningen.
+- Resultatet er ikke en liste, men et objekt, hvor hvert ord kender sin egen grundform, ordklasse og rolle i sætningen, osv.
 
 ---
 
 ![](resources/pipeline-design.svg){fig-align="center"}
 
----
+## [KONCEPTUELT OM SPACY; HVORDAN TRÆNET]
 
 [KONCEPTUELT OM SPACY; HVORDAN TRÆNET]
 
@@ -664,11 +629,9 @@ for tok in doc:
 
 <br>
 
-::: {.incremental}
+## Indbyggede stopord
 
 `tok.is_stop` er en færdig stopordsliste. Den I selv har skrevet var på 78 ord. Den her er lavet af folk, der arbejder med området.
-
-:::
 
 ## Ordklasser som filter
 
@@ -685,20 +648,24 @@ I stedet for at fjerne ord fra en liste, kan I **beholde** specifikke ordklasser
 
 - I jobopslag ligger indholdet i **navneordene**: kompetencer, fag, steder, titler. **Udsagnsordene** er stort set de samme i alle opslag: *søger, tilbyder, forventer*.
 
-- Det er en helt anden slags dimensionalitetsreduktion end en stopordsliste og den er begrundet i sproget frem for i en liste, nogen har skrevet.
+- Det er en helt anden slags `dimensionalitetsreduktion` end en stopordsliste og den er begrundet i sproget frem for i en liste, nogen har skrevet.
 
 ## Hele korpusset
 
 ```python
-docs = nlp.pipe(opslag["job_description"].astype(str), batch_size=50)
-
 renset = []
-for doc in docs:
+for doc in nlp.pipe(tekster, batch_size=50):
     renset.append([tok.lemma_.lower() for tok in doc
                    if not tok.is_stop
                    and not tok.is_punct
                    and not tok.like_num
                    and tok.pos_ in ("NOUN", "PROPN", "ADJ")])
+
+# tilbage i tabellen: én liste per opslag, samme rækkefølge
+opslag["ord"] = renset
+
+# og ud i langt format, ét ord per række
+lemmaer = opslag["ord"].explode()
 ```
 
 <br>
@@ -715,7 +682,7 @@ for doc in docs:
 doc = nlp("Vi søger en erfaren socialrådgiver.")
 
 # mange ad gangen
-docs = nlp.pipe(["Vi søger ...", "Stillingen er ...", "Du skal ..."])
+docs = nlp.pipe(["Vi søger ...", "Stillingen er ...", "Du skal ..."], batch_size=50)
 ```
 
 - docs er så en samling, vi kan løbe igennem.
@@ -735,18 +702,6 @@ docs = nlp.pipe(["Vi søger ...", "Stillingen er ...", "Du skal ..."])
 ## Øvelser
 
 I får den rå fil, ikke den rensede.
-
-1. **Få filen ind.** Find separator, overskriftsrække og tegnsæt.
-
-2. **Hent metadata ud.** Firma, sted og dato ligger i et fritekstfelt. Håndtér de opslag, hvor det ikke passer.
-
-3. **Byg kæden.** Kør de fem trin, og skriv tokens og typer ned efter hvert.
-
-4. **Skift rækkefølge.** Fjern stopord før små bogstaver. Får I det samme?
-
-5. **Byg matricen.** Lav en document-term matrix og beregn dens sparsity.
-
-6. **spaCy.** Kør pipelinen på 200 opslag, og sammenlign vokabularet med regelversionen.
 
 **Dokumentation:** [spaCy 101](https://spacy.io/usage/spacy-101)
 

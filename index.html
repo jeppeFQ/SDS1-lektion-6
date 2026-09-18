@@ -12,7 +12,7 @@
   <meta name="generator" content="quarto-1.7.31">
 
   <meta name="author" content="Jeppe Fjeldgaard Qvist">
-  <meta name="dcterms.date" content="2026-09-17">
+  <meta name="dcterms.date" content="2026-09-18">
   <title>Lektion 6</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -211,7 +211,7 @@ Jeppe Fjeldgaard Qvist
 </div>
 </div>
 
-  <p class="date">2026-09-17</p>
+  <p class="date">2026-09-18</p>
 </section>
 <section class="slide level2">
 
@@ -236,7 +236,7 @@ mkdir -p .qmd-pause && mv *.qmd .qmd-pause/ && \
 <p><br></p>
 
 <aside><div>
-<p>Ingen R-kode i disse slides. Vi arbejder med værktøjer, der ikke har en meningsfuld modsvarighed der kan køre i browseren (mig bekendt). Dog kan alt det I ser i dag, også gennemføres i R, med andre værktøjer.</p>
+<p>Ingen R-kode i disse slides. Vi arbejder med værktøjer, der ikke har et meningsfuldt alternativt i R, der kan køre i browseren (mig bekendt). Dog kan alt det I ser i dag, også gennemføres i R lokalt og med andre værktøjer.</p>
 </div></aside></section>
 <section id="dagens-data" class="slide level2">
 <h2>Dagens data</h2>
@@ -270,8 +270,9 @@ C error: Expected 1 fields in line 3, saw 3</code></pre>
 </section>
 <section id="tre-ting-galt" class="slide level2">
 <h2>Tre ting galt</h2>
-<p><strong>1. Separatoren er semikolon.</strong> Dansk Excel bruger <code>;</code>, fordi kommaet er decimaltegn.</p>
-<p><strong>2. Første linje er falsk.</strong> Der står <code>Column1;Column2;...</code>. Den rigtige overskrift står på linje to.</p>
+<p><strong>1. Separatoren er semikolon.</strong> Dansk Excel bruger <code>;</code>, ikke <code>,</code></p>
+<p><strong>2. Første linje er forkert.</strong> Der står <code>Column1;Column2;...</code>. Den rigtige overskrift står på linje to.</p>
+<p><strong>2.1. Der er en fejl i dataen på linje 7174.</strong></p>
 <p><strong>3. Tegnsættet er ikke UTF-8.</strong> <code>København</code> står i filen som <code>K?benhavn</code>.</p>
 <p><br></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a>opslag <span class="op">=</span> pd.read_csv(<span class="st">"jobapplications_fall-2023.csv"</span>,</span>
@@ -286,11 +287,11 @@ C error: Expected 1 fields in line 3, saw 3</code></pre>
 </ul>
 <p><br></p>
 <blockquote>
-<p>Får I <code>Ã¸</code> eller <code>?</code> i stedet for <code>ø</code>, er det aldrig et problem med dataene. Det er et problem med, hvordan de bliver læst.</p>
+<p>Får I <code>Ã¸</code> eller <code>?</code> i stedet for <code>ø</code>, er det som udgangspunkt aldrig et problem med dataene. Det er et problem med, hvordan de bliver læst.</p>
 </blockquote>
 </section>
-<section id="så-skulle-det-virke" class="slide level2">
-<h2>Så skulle det virke …</h2>
+<section id="et-udsnit-af-daten-indlæst" class="slide level2">
+<h2>Et udsnit af daten indlæst …</h2>
 <div class="cell" data-autorun="true">
 <div>
 <div id="pyodide-1" class="exercise-cell">
@@ -318,7 +319,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBy
 </div>
 <p><br></p>
 <div class="fragment">
-<p><code>company</code> mangler for langt de fleste opslag. Men ikke tilfældigt — den findes for <strong>alle</strong> opslag fra jobbank.dk og for <strong>ingen</strong> fra de tre andre.</p>
+<p><code>company</code> mangler for langt de fleste opslag. Men ikke tilfældigt! Den findes for <strong>alle</strong> opslag fra jobbank.dk og for <strong>ingen</strong> fra de tre andre.</p>
 </div>
 </section>
 <section id="firmanavnet-eksisterer-dog-for-de-andre" class="slide level2">
@@ -391,7 +392,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Imhh
 
 </div>
 <script type="pyodide-6-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InRla3N0ZXIgPSBvcHNsYWdbXCJqb2JfZGVzY3JpcHRpb25cIl0uYXN0eXBlKHN0cilcblxuYWxsZV9vcmQgPSBbbyBmb3IgdCBpbiB0ZWtzdGVyIGZvciBvIGluIHQuc3BsaXQoKV1cblxucHJpbnQoXCJUb2tlbnMgaSBhbHQ6XCIsIGxlbihhbGxlX29yZCkpXG5wcmludChcIlVuaWtrZSBvcmQ6ICBcIiwgbGVuKHNldChhbGxlX29yZCkpKSJ9
+eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InRla3N0ZXIgPSBvcHNsYWdbXCJqb2JfZGVzY3JpcHRpb25cIl0uYXN0eXBlKHN0cilcblxuIyDDqXQgb3JkIHBlciByw6Zra2UuIEluZGVrc2V0IGh1c2tlciwgaHZpbGtldCBvcHNsYWcgb3JkZXQga29tIGZyYVxub3JkID0gdGVrc3Rlci5zdHIuc3BsaXQoKS5leHBsb2RlKClcblxucHJpbnQoXCJUb2tlbnMgaSBhbHQ6XCIsIGxlbihvcmQpKVxucHJpbnQoXCJVbmlra2Ugb3JkOiAgXCIsIG9yZC5udW5pcXVlKCkpIn0=
 </script>
 </div>
 </div>
@@ -433,7 +434,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InRl
 <tr class="even">
 <td><strong>N</strong></td>
 <td>Fjern tal</td>
-<td>“§ 17” og “2024” kan være indholdet</td>
+<td>“§ 17” og “2024” kan være indhold</td>
 </tr>
 <tr class="odd">
 <td><strong>L</strong></td>
@@ -473,7 +474,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InRl
 
 </div>
 <script type="pyodide-7-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Imxvd2VyID0gW28ubG93ZXIoKSBmb3IgbyBpbiBhbGxlX29yZF1cblxucHJpbnQoXCJUb2tlbnM6IFwiLCBsZW4obG93ZXIpKVxucHJpbnQoXCJUeXBlcjogIFwiLCBsZW4oc2V0KGxvd2VyKSkpIn0=
+eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Im9yZCA9IG9yZC5zdHIubG93ZXIoKVxuXG5wcmludChcIlRva2VuczogXCIsIGxlbihvcmQpKVxucHJpbnQoXCJUeXBlcjogIFwiLCBvcmQubnVuaXF1ZSgpKSJ9
 </script>
 </div>
 </div>
@@ -489,7 +490,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Imxv
 
 </div>
 <script type="pyodide-8-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6ImltcG9ydCBzdHJpbmdcbnRlZ24gPSBzdHJpbmcucHVuY3R1YXRpb24gKyBcIsKrwrvigKbigJPigJRcIlxuXG51ZGVuX3RlZ24gPSBbby5zdHJpcCh0ZWduKSBmb3IgbyBpbiBsb3dlcl1cbnVkZW5fdGVnbiA9IFtvIGZvciBvIGluIHVkZW5fdGVnbiBpZiBvXVxuXG5wcmludChcIlRva2VuczogXCIsIGxlbih1ZGVuX3RlZ24pKVxucHJpbnQoXCJUeXBlcjogIFwiLCBsZW4oc2V0KHVkZW5fdGVnbikpKSJ9
+eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6ImltcG9ydCBzdHJpbmdcbnRlZ24gPSBzdHJpbmcucHVuY3R1YXRpb24gKyBcIsKrwrvigKbigJPigJRcIlxuXG5vcmQgPSBvcmQuc3RyLnN0cmlwKHRlZ24pXG5vcmQgPSBvcmRbb3JkICE9IFwiXCJdICAgICAgICAgICAgIyBub2dsZSBvcmQgdmFyIGt1biB0ZWduc8OmdG5pbmdcblxucHJpbnQoXCJUb2tlbnM6IFwiLCBsZW4ob3JkKSlcbnByaW50KFwiVHlwZXI6ICBcIiwgb3JkLm51bmlxdWUoKSkifQ==
 </script>
 </div>
 </div>
@@ -507,7 +508,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Imlt
 
 </div>
 <script type="pyodide-9-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InVkZW5fdGFsID0gW28gZm9yIG8gaW4gdWRlbl90ZWduIGlmIG5vdCBhbnkoYy5pc2RpZ2l0KCkgZm9yIGMgaW4gbyldXG5cbnByaW50KFwiVG9rZW5zOiBcIiwgbGVuKHVkZW5fdGFsKSlcbnByaW50KFwiVHlwZXI6ICBcIiwgbGVuKHNldCh1ZGVuX3RhbCkpKSJ9
+eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Im9yZCA9IG9yZFt+b3JkLnN0ci5jb250YWlucyhyXCJcXGRcIildICAgICAjIFxcZCBiZXR5ZGVyIFwiZXQgY2lmZmVyXCJcblxucHJpbnQoXCJUb2tlbnM6IFwiLCBsZW4ob3JkKSlcbnByaW50KFwiVHlwZXI6ICBcIiwgb3JkLm51bmlxdWUoKSkifQ==
 </script>
 </div>
 </div>
@@ -517,18 +518,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InVk
 <li><p>Er det støj, eller er det indhold? Det afhænger helt af spørgsmålet.</p></li>
 </ul>
 </section>
-<section class="slide level2">
-
-<pre><code>[o for o in uden_tegn if not any(c.isdigit() for c in o)]
-     ^                              ^
-     o = et ORD                     c = et TEGN i det ord</code></pre>
-<p><br> <br></p>
-<pre><code>for o in uden_tegn          for hvert ORD i listen
-    for c in o              kig på hvert TEGN i ordet
-        c.isdigit()         er tegnet et ciffer?
-    any(...)                var mindst ét af dem et ciffer?
-    if not ...              hvis nej: behold ordet</code></pre>
-</section>
 <section id="w-stopord" class="slide level2">
 <h2>W: stopord</h2>
 <div class="cell" data-autorun="false">
@@ -537,14 +526,12 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InVk
 
 </div>
 <script type="pyodide-10-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InN0b3BvcmQgPSBzZXQoXCJcIlwib2cgaSBqZWcgZGV0IGF0IGVuIGRlbiB0aWwgZXIgc29tIHDDpSBkZSBtZWQgaGFuIGFmIGZvciBpa2tlXG5kZXIgdmFyIG1pZyBzaWcgbWVuIGV0IGhhciBvbSB2aSBtaW4gaGF2ZGUgaGFtIGh1biBudSBvdmVyIGRhIGZyYSBkdSB1ZCBzaW5cbmRlbSBvcyBvcCBtYW4gaGFucyBodm9yIGVsbGVyIGh2YWQgc2thbCBzZWx2IGhlciBhbGxlIHZpbCBibGV2IGt1bm5lIGluZCBuw6VyXG52w6ZyZSBkb2cgam8gZGV0dGUgZGlnIGRlcmVzIGVuZCBtaXQgb2dzw6UgdW5kZXIgaGF2ZSBkZW5zIGh2aXMgZGluZSBkaXNzZVxuaHZlbSB2b3JlcyBqZXIgc8OlZGFuIGFuZHJlIG5vZ2xlIGJsaXZlciBibGl2ZSBrYW5cIlwiXCIuc3BsaXQoKSlcblxudWRlbl9zdG9wID0gW28gZm9yIG8gaW4gdWRlbl90YWwgaWYgbyBub3QgaW4gc3RvcG9yZF1cblxucHJpbnQoXCJUb2tlbnM6IFwiLCBsZW4odWRlbl9zdG9wKSlcbnByaW50KFwiVHlwZXI6ICBcIiwgbGVuKHNldCh1ZGVuX3N0b3ApKSkifQ==
+eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InN0b3BvcmQgPSBzZXQoXCJcIlwib2cgaSBqZWcgZGV0IGF0IGVuIGRlbiB0aWwgZXIgc29tIHDDpSBkZSBtZWQgaGFuIGFmIGZvciBpa2tlXG5kZXIgdmFyIG1pZyBzaWcgbWVuIGV0IGhhciBvbSB2aSBtaW4gaGF2ZGUgaGFtIGh1biBudSBvdmVyIGRhIGZyYSBkdSB1ZCBzaW5cbmRlbSBvcyBvcCBtYW4gaGFucyBodm9yIGVsbGVyIGh2YWQgc2thbCBzZWx2IGhlciBhbGxlIHZpbCBibGV2IGt1bm5lIGluZCBuw6VyXG52w6ZyZSBkb2cgam8gZGV0dGUgZGlnIGRlcmVzIGVuZCBtaXQgb2dzw6UgdW5kZXIgaGF2ZSBkZW5zIGh2aXMgZGluZSBkaXNzZVxuaHZlbSB2b3JlcyBqZXIgc8OlZGFuIGFuZHJlIG5vZ2xlIGJsaXZlciBibGl2ZSBrYW5cIlwiXCIuc3BsaXQoKSlcblxub3JkID0gb3JkW35vcmQuaXNpbihzdG9wb3JkKV1cblxucHJpbnQoXCJUb2tlbnM6IFwiLCBsZW4ob3JkKSlcbnByaW50KFwiVHlwZXI6ICBcIiwgb3JkLm51bmlxdWUoKSkifQ==
 </script>
 </div>
 </div>
 <p><br></p>
-<ul>
-<li class="fragment">Her sker det modsatte af de foregående skridt. <strong>En tredjedel af alle tokens forsvinder</strong> … men vokabularet falder kun med antallet af ord på listen.</li>
-</ul>
+<p>Her sker det modsatte af de foregående skridt. <strong>En tredjedel af alle tokens forsvinder</strong> … men vokabularet falder kun med antallet af ord på listen.</p>
 
 <aside><div>
 <p><code>"""</code> er en streng, der må fylde flere linjer.</p>
@@ -557,7 +544,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InN0
 
 </div>
 <script type="pyodide-11-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6ImZyb20gY29sbGVjdGlvbnMgaW1wb3J0IENvdW50ZXJcblxuZG9rdW1lbnRfZnJla3ZlbnMgPSBDb3VudGVyKClcbmZvciB0IGluIHRla3N0ZXI6XG4gICAgb3JkX2lfZG9rID0ge28uc3RyaXAodGVnbikubG93ZXIoKSBmb3IgbyBpbiB0LnNwbGl0KCl9XG4gICAgZG9rdW1lbnRfZnJla3ZlbnMudXBkYXRlKG8gZm9yIG8gaW4gb3JkX2lfZG9rIGlmIG8gYW5kIG8gbm90IGluIHN0b3BvcmQpXG5cbmh5cHBpZ2UgPSB7byBmb3IgbywgbiBpbiBkb2t1bWVudF9mcmVrdmVucy5pdGVtcygpIGlmIG4gPj0gNX1cbmJlc2thYXJldCA9IFtvIGZvciBvIGluIHVkZW5fc3RvcCBpZiBvIGluIGh5cHBpZ2VdXG5cbnByaW50KFwiVG9rZW5zOiBcIiwgbGVuKGJlc2thYXJldCkpXG5wcmludChcIlR5cGVyOiAgXCIsIGxlbihzZXQoYmVza2FhcmV0KSkpIn0=
+eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6IiMgw6l0IG9yZCBwZXIgZG9rdW1lbnQ6IGRyb3AgZ2VuZ2FuZ2VyZSBpbmRlbiBmb3Igc2FtbWUgb3BzbGFnXG5wYXIgPSBvcmQucmVuYW1lKFwib3JkXCIpLnJlc2V0X2luZGV4KCkuZHJvcF9kdXBsaWNhdGVzKClcbmRva19mcmVrdmVucyA9IHBhcltcIm9yZFwiXS52YWx1ZV9jb3VudHMoKVxuXG5oeXBwaWdlID0gZG9rX2ZyZWt2ZW5zW2Rva19mcmVrdmVucyA+PSA1XS5pbmRleFxub3JkID0gb3JkW29yZC5pc2luKGh5cHBpZ2UpXVxuXG5wcmludChcIlRva2VuczogXCIsIGxlbihvcmQpKVxucHJpbnQoXCJUeXBlcjogIFwiLCBvcmQubnVuaXF1ZSgpKSJ9
 </script>
 </div>
 </div>
@@ -588,38 +575,38 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6ImZy
 </tr>
 <tr class="odd">
 <td>+ fjern tegnsætning</td>
-<td style="text-align: right;">4.527.249</td>
-<td style="text-align: right;">104.043</td>
+<td style="text-align: right;">4.529.235</td>
+<td style="text-align: right;">105.610</td>
 </tr>
 <tr class="even">
 <td>+ fjern tal</td>
-<td style="text-align: right;">4.440.382</td>
-<td style="text-align: right;">95.524</td>
+<td style="text-align: right;">4.442.368</td>
+<td style="text-align: right;">97.076</td>
 </tr>
 <tr class="odd">
 <td>+ fjern stopord</td>
-<td style="text-align: right;">2.967.208</td>
-<td style="text-align: right;">95.446</td>
+<td style="text-align: right;">2.969.611</td>
+<td style="text-align: right;">96.998</td>
 </tr>
 <tr class="even">
 <td>+ fjern sjældne (df &lt; 5)</td>
-<td style="text-align: right;">2.826.672</td>
-<td style="text-align: right;"><strong>24.804</strong></td>
+<td style="text-align: right;">2.827.026</td>
+<td style="text-align: right;"><strong>24.876</strong></td>
 </tr>
 </tbody>
 </table>
 <p><br></p>
-<p><strong>86 % af vokabularet væk. 62 % af tokens tilbage.</strong> Det er dimensionalitetsreduktion.</p>
+<p><strong>86 % af vokabularet væk. 62 % af tokens tilbage.</strong> Det er <code>dimensionalitetsreduktion</code>.</p>
 </section>
 <section id="to-slags-reduktion" class="slide level2">
 <h2>To slags reduktion</h2>
 <ul>
-<li class="fragment"><p><strong>Stopord</strong> fjerner 1,5 millioner tokens og 78 typer. Teksten bliver kortere; tabellen bliver ikke smallere.</p></li>
-<li class="fragment"><p><strong>Sjældne ord</strong> fjerner 70.000 typer og kun 3 % af tokens. Tabellen bliver meget smallere; teksten bliver næsten ikke kortere.</p></li>
+<li><p><strong>Stopord</strong> fjerner 1,5 millioner tokens og 78 typer. Teksten bliver kortere; tabellen bliver ikke smallere.</p></li>
+<li><p><strong>Sjældne ord</strong> fjerner 72.000 typer og kun 3 % af tokens. Tabellen bliver meget smallere; teksten bliver næsten ikke kortere.</p></li>
 </ul>
 <p><br></p>
 <ul>
-<li><p><strong>42.012 ord optræder i præcis ét dokument.</strong> En fjerdedel af hele vokabularet.</p>
+<li><p><strong>43.082 tokens (ord/tegn) optræder i præcis ét dokument.</strong> En fjerdedel af hele vokabularet.</p>
 <ul>
 <li>De fylder en fjerdedel af tabellen og kan per definition ikke bruges til at sammenligne dokumenter.</li>
 </ul></li>
@@ -629,7 +616,11 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6ImZy
 <h2>Denny &amp; Spirling: rækkefølgen og kombinationen</h2>
 <p>Syv operationer, der hver kan slås til eller fra, giver <strong>2⁷ = 128</strong> forskellige feature-sæt af det samme materiale.</p>
 <p>Vi prøvede fire af dem på 2.000 opslag:</p>
-<p><code>L=1 P=1 N=1 S=1</code> -&gt; 45.638 unikke ord <code>L=1 P=0 N=0 S=0</code> -&gt; 71.241 unikke ord <code>L=0 P=0 N=0 S=0</code> -&gt; 78.544 unikke ord</p>
+<ul>
+<li class="fragment"><p><code>L=1 P=1 N=1 S=1</code> -&gt; 45.638 unikke ord</p></li>
+<li class="fragment"><p><code>L=1 P=0 N=0 S=0</code> -&gt; 71.241 unikke ord</p></li>
+<li class="fragment"><p><code>L=0 P=0 N=0 S=0</code> -&gt; 78.544 unikke ord</p></li>
+</ul>
 <p>Samme tekster. Vokabularet varierer med en faktor to.</p>
 </section>
 <section id="konsekvenser-for-usuperviserede-metoder" class="slide level2">
@@ -705,7 +696,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6ImZy
 
 </div>
 <script type="pyodide-12-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Im5fZG9rID0gbGVuKHRla3N0ZXIpXG5uX29yZCA9IGxlbihoeXBwaWdlKVxuXG5jZWxsZXIgPSBuX2RvayAqIG5fb3JkXG51ZGZ5bGR0ZSA9IHN1bShsZW4oe28uc3RyaXAodGVnbikubG93ZXIoKSBmb3IgbyBpbiB0LnNwbGl0KCl9ICYgaHlwcGlnZSlcbiAgICAgICAgICAgICAgIGZvciB0IGluIHRla3N0ZXIpXG5cbnByaW50KFwiTWF0cml4OiAgXCIsIG5fZG9rLCBcInhcIiwgbl9vcmQsIFwiPVwiLCBjZWxsZXIsIFwiY2VsbGVyXCIpXG5wcmludChcIklra2UtbnVsOlwiLCB1ZGZ5bGR0ZSlcbnByaW50KFwiU3BhcnNpdHk6XCIsIHJvdW5kKCgxIC0gdWRmeWxkdGUgLyBjZWxsZXIpICogMTAwLCAyKSwgXCIlXCIpIn0=
+eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6IiMgY3Jvc3N0YWIgdMOmbGxlciwgaHZvciBtYW5nZSBnYW5nZSBodmVydCBvcmQgc3TDpXIgaSBodmVydCBkb2t1bWVudFxuZHRtID0gcGQuY3Jvc3N0YWIob3JkLmluZGV4LCBvcmQpXG5cbnByaW50KFwiTWF0cml4OiAgXCIsIGR0bS5zaGFwZSlcbnByaW50KFwiSWtrZS1udWw6XCIsIChkdG0gIT0gMCkudG9fbnVtcHkoKS5zdW0oKSlcbnByaW50KFwiU3BhcnNpdHk6XCIsIHJvdW5kKChkdG0gPT0gMCkudG9fbnVtcHkoKS5tZWFuKCkgKiAxMDAsIDIpLCBcIiVcIikifQ==
 </script>
 </div>
 </div>
@@ -742,7 +733,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6Im5f
 
 </div>
 <script type="pyodide-13-contents">
-eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InRhZWwgPSBDb3VudGVyKGJlc2thYXJldClcblxuZm9yIG9yZCwgbiBpbiB0YWVsLm1vc3RfY29tbW9uKDE1KTpcbiAgICBwcmludChmXCJ7b3JkOjIwfSB7bn1cIikifQ==
+eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InByaW50KG9yZC52YWx1ZV9jb3VudHMoKS5oZWFkKDE1KSkifQ==
 </script>
 </div>
 </div>
@@ -788,22 +779,22 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 </div></aside></section>
 <section id="pipelinen" class="slide level2">
 <h2>Pipelinen</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a><span class="im">import</span> spacy</span>
-<span id="cb6-2"><a href=""></a></span>
-<span id="cb6-3"><a href=""></a>nlp <span class="op">=</span> spacy.load(<span class="st">"da_core_news_sm"</span>)</span>
-<span id="cb6-4"><a href=""></a></span>
-<span id="cb6-5"><a href=""></a>mikro <span class="op">=</span> [</span>
-<span id="cb6-6"><a href=""></a>    <span class="st">"Vi søger en erfaren socialrådgiver til vores team i Aarhus."</span>,</span>
-<span id="cb6-7"><a href=""></a>    <span class="st">"Stillingen er en fast stilling på 37 timer om ugen."</span>,</span>
-<span id="cb6-8"><a href=""></a>    <span class="st">"Du skal være uddannet cand.jur. og have mindst tre års erfaring."</span>,</span>
-<span id="cb6-9"><a href=""></a>    <span class="st">"Sekretariatet har kontor ved Nørreport Station i København."</span>,</span>
-<span id="cb6-10"><a href=""></a>    <span class="st">"Vi søgte sidste år en projektleder, og vi søger igen i 2024."</span>,</span>
-<span id="cb6-11"><a href=""></a>    <span class="st">"Regionen tilbyder et godt arbejdsmiljø og gode udviklingsmuligheder."</span>,</span>
-<span id="cb6-12"><a href=""></a>    <span class="st">"Ansøgningsfristen er den 12. november 2023 — send den via linket."</span>,</span>
-<span id="cb6-13"><a href=""></a>    <span class="st">"We are looking for a senior consultant to join our team in Esbjerg."</span>,</span>
-<span id="cb6-14"><a href=""></a>]</span>
-<span id="cb6-15"><a href=""></a></span>
-<span id="cb6-16"><a href=""></a>doc <span class="op">=</span> nlp(mikro[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="im">import</span> spacy</span>
+<span id="cb4-2"><a href=""></a></span>
+<span id="cb4-3"><a href=""></a>nlp <span class="op">=</span> spacy.load(<span class="st">"da_core_news_sm"</span>)</span>
+<span id="cb4-4"><a href=""></a></span>
+<span id="cb4-5"><a href=""></a>mikro <span class="op">=</span> [</span>
+<span id="cb4-6"><a href=""></a>    <span class="st">"Vi søger en erfaren socialrådgiver til vores team i Aarhus."</span>,</span>
+<span id="cb4-7"><a href=""></a>    <span class="st">"Stillingen er en fast stilling på 37 timer om ugen."</span>,</span>
+<span id="cb4-8"><a href=""></a>    <span class="st">"Du skal være uddannet cand.jur. og have mindst tre års erfaring."</span>,</span>
+<span id="cb4-9"><a href=""></a>    <span class="st">"Sekretariatet har kontor ved Nørreport Station i København."</span>,</span>
+<span id="cb4-10"><a href=""></a>    <span class="st">"Vi søgte sidste år en projektleder, og vi søger igen i 2024."</span>,</span>
+<span id="cb4-11"><a href=""></a>    <span class="st">"Regionen tilbyder et godt arbejdsmiljø og gode udviklingsmuligheder."</span>,</span>
+<span id="cb4-12"><a href=""></a>    <span class="st">"Ansøgningsfristen er den 12. november 2023 — send den via linket."</span>,</span>
+<span id="cb4-13"><a href=""></a>    <span class="st">"We are looking for a senior consultant to join our team in Esbjerg."</span>,</span>
+<span id="cb4-14"><a href=""></a>]</span>
+<span id="cb4-15"><a href=""></a></span>
+<span id="cb4-16"><a href=""></a>doc <span class="op">=</span> nlp(mikro[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
 <ul>
 <li><p><code>spacy.load()</code> henter en <strong>model</strong>, ikke bare en funktion. Teksten løber gennem en række trin, som hver tilføjer et lag information:</p></li>
@@ -820,8 +811,8 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 </section>
 <section id="lemmatisering-i-stedet-for-stemming" class="slide level2">
 <h2>Lemmatisering i stedet for stemming</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a><span class="cf">for</span> tok <span class="kw">in</span> doc:</span>
-<span id="cb7-2"><a href=""></a>    <span class="bu">print</span>(tok.text, tok.lemma_, tok.pos_, tok.is_stop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="cf">for</span> tok <span class="kw">in</span> doc:</span>
+<span id="cb5-2"><a href=""></a>    <span class="bu">print</span>(tok.text, tok.lemma_, tok.pos_, tok.is_stop)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
 <ul>
 <li><p><strong>Stemming</strong> klipper enderne af efter en regel. <code>universitet</code> og <code>universel</code> kan ende samme sted.</p></li>
@@ -832,8 +823,8 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 </section>
 <section id="ordklasser-som-filter" class="slide level2">
 <h2>Ordklasser som filter</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a>navneord <span class="op">=</span> [tok.lemma_ <span class="cf">for</span> tok <span class="kw">in</span> doc</span>
-<span id="cb8-2"><a href=""></a>            <span class="cf">if</span> tok.pos_ <span class="kw">in</span> (<span class="st">"NOUN"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href=""></a>navneord <span class="op">=</span> [tok.lemma_ <span class="cf">for</span> tok <span class="kw">in</span> doc</span>
+<span id="cb6-2"><a href=""></a>            <span class="cf">if</span> tok.pos_ <span class="kw">in</span> (<span class="st">"NOUN"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
 <p>I stedet for at fjerne ord fra en liste, kan I <strong>beholde</strong> specifikke ordklasser.</p>
 <p><br></p>
@@ -844,15 +835,19 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 </section>
 <section id="hele-korpusset" class="slide level2">
 <h2>Hele korpusset</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href=""></a>docs <span class="op">=</span> nlp.pipe(opslag[<span class="st">"job_description"</span>].astype(<span class="bu">str</span>), batch_size<span class="op">=</span><span class="dv">50</span>)</span>
-<span id="cb9-2"><a href=""></a></span>
-<span id="cb9-3"><a href=""></a>renset <span class="op">=</span> []</span>
-<span id="cb9-4"><a href=""></a><span class="cf">for</span> doc <span class="kw">in</span> docs:</span>
-<span id="cb9-5"><a href=""></a>    renset.append([tok.lemma_.lower() <span class="cf">for</span> tok <span class="kw">in</span> doc</span>
-<span id="cb9-6"><a href=""></a>                   <span class="cf">if</span> <span class="kw">not</span> tok.is_stop</span>
-<span id="cb9-7"><a href=""></a>                   <span class="kw">and</span> <span class="kw">not</span> tok.is_punct</span>
-<span id="cb9-8"><a href=""></a>                   <span class="kw">and</span> <span class="kw">not</span> tok.like_num</span>
-<span id="cb9-9"><a href=""></a>                   <span class="kw">and</span> tok.pos_ <span class="kw">in</span> (<span class="st">"NOUN"</span>, <span class="st">"PROPN"</span>, <span class="st">"ADJ"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href=""></a>renset <span class="op">=</span> []</span>
+<span id="cb7-2"><a href=""></a><span class="cf">for</span> doc <span class="kw">in</span> nlp.pipe(tekster, batch_size<span class="op">=</span><span class="dv">50</span>):</span>
+<span id="cb7-3"><a href=""></a>    renset.append([tok.lemma_.lower() <span class="cf">for</span> tok <span class="kw">in</span> doc</span>
+<span id="cb7-4"><a href=""></a>                   <span class="cf">if</span> <span class="kw">not</span> tok.is_stop</span>
+<span id="cb7-5"><a href=""></a>                   <span class="kw">and</span> <span class="kw">not</span> tok.is_punct</span>
+<span id="cb7-6"><a href=""></a>                   <span class="kw">and</span> <span class="kw">not</span> tok.like_num</span>
+<span id="cb7-7"><a href=""></a>                   <span class="kw">and</span> tok.pos_ <span class="kw">in</span> (<span class="st">"NOUN"</span>, <span class="st">"PROPN"</span>, <span class="st">"ADJ"</span>)])</span>
+<span id="cb7-8"><a href=""></a></span>
+<span id="cb7-9"><a href=""></a><span class="co"># tilbage i tabellen: én liste per opslag, samme rækkefølge</span></span>
+<span id="cb7-10"><a href=""></a>opslag[<span class="st">"ord"</span>] <span class="op">=</span> renset</span>
+<span id="cb7-11"><a href=""></a></span>
+<span id="cb7-12"><a href=""></a><span class="co"># og ud i langt format, ét ord per række - som resten af kæden</span></span>
+<span id="cb7-13"><a href=""></a>lemmaer <span class="op">=</span> opslag[<span class="st">"ord"</span>].explode()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
 <ul>
 <li><p><code>nlp.pipe()</code> kører mange tekster igennem ad gangen og er langt hurtigere end en løkke med <code>nlp(t)</code>.</p></li>
@@ -862,11 +857,11 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <section class="slide level2">
 
 <p><code>nlp(tekst)</code> kører én tekst igennem. <code>nlp.pipe(liste)</code> kører mange igennem.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href=""></a><span class="co"># én ad gangen</span></span>
-<span id="cb10-2"><a href=""></a>doc <span class="op">=</span> nlp(<span class="st">"Vi søger en erfaren socialrådgiver."</span>)</span>
-<span id="cb10-3"><a href=""></a></span>
-<span id="cb10-4"><a href=""></a><span class="co"># mange ad gangen</span></span>
-<span id="cb10-5"><a href=""></a>docs <span class="op">=</span> nlp.pipe([<span class="st">"Vi søger ..."</span>, <span class="st">"Stillingen er ..."</span>, <span class="st">"Du skal ..."</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href=""></a><span class="co"># én ad gangen</span></span>
+<span id="cb8-2"><a href=""></a>doc <span class="op">=</span> nlp(<span class="st">"Vi søger en erfaren socialrådgiver."</span>)</span>
+<span id="cb8-3"><a href=""></a></span>
+<span id="cb8-4"><a href=""></a><span class="co"># mange ad gangen</span></span>
+<span id="cb8-5"><a href=""></a>docs <span class="op">=</span> nlp.pipe([<span class="st">"Vi søger ..."</span>, <span class="st">"Stillingen er ..."</span>, <span class="st">"Du skal ..."</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li><p>docs er så en samling, vi kan løbe igennem.</p></li>
 <li><p>batch_size er hvor mange den tager ad gangen. Jo større, des mere kræves der af hukommelsen.</p></li>
@@ -887,7 +882,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 </section>
 <section id="øvelser" class="slide level2 scrollable">
 <h2>Øvelser</h2>
-<p><span class="timer" data-time="1200"></span></p>
 <p>I får den rå fil, ikke den rensede.</p>
 <ol type="1">
 <li><p><strong>Få filen ind.</strong> Find separator, overskriftsrække og tegnsæt.</p></li>
