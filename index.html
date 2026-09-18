@@ -617,30 +617,30 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6IiMg
 <p>Syv operationer, der hver kan slås til eller fra, giver <strong>2⁷ = 128</strong> forskellige feature-sæt af det samme materiale.</p>
 <p>Vi prøvede fire af dem på 2.000 opslag:</p>
 <ul>
-<li class="fragment"><p><code>L=1 P=1 N=1 S=1</code> -&gt; 45.638 unikke ord</p></li>
-<li class="fragment"><p><code>L=1 P=0 N=0 S=0</code> -&gt; 71.241 unikke ord</p></li>
-<li class="fragment"><p><code>L=0 P=0 N=0 S=0</code> -&gt; 78.544 unikke ord</p></li>
+<li><p><code>L=1 P=1 N=1 S=1</code> -&gt; 45.638 unikke ord</p></li>
+<li><p><code>L=1 P=0 N=0 S=0</code> -&gt; 71.241 unikke ord</p></li>
+<li><p><code>L=0 P=0 N=0 S=0</code> -&gt; 78.544 unikke ord</p></li>
 </ul>
 <p>Samme tekster. Vokabularet varierer med en faktor to.</p>
 </section>
-<section id="konsekvenser-for-usuperviserede-metoder" class="slide level2">
-<h2>Konsekvenser for usuperviserede metoder</h2>
+<section id="konsekvenser-afhænger-af-metoder" class="slide level2">
+<h2>Konsekvenser afhænger af metode(r)</h2>
 <ul>
 <li><p>Ved <strong>klassifikation</strong> kan man måle sig frem: prøv kombinationerne, vælg den med den bedste accuracy. <em>Der findes et facit.</em></p></li>
-<li><p>Ved <strong>klyngeanalyse og topic models</strong> findes der <em>ikke noget facit</em>. Ingen kan sige, om fire klynger er rigtigere end fem.</p></li>
+<li><p>Ved <strong>klyngeanalyse og topic models</strong> findes der <em>ikke noget facit</em>. Ingen kan endegyldigt sige, om fire klynger er rigtigere end fem.</p></li>
 </ul>
 <p><br></p>
 <p>Preprocessing-råd kommer overvejende fra klassifikationslitteraturen og bliver overført ukritisk til det usuperviserede. <strong>Det er Denny &amp; Spirlings hovedanke.</strong></p>
 <blockquote>
-<p>Konsekvensen: jeres preprocessingvalg kan ændre konklusionen, uden at nogen kan opdage det.</p>
+<p>Altså, jeres preprocessingvalg kan ændre konklusionen, uden at nogen kan opdage det.</p>
 </blockquote>
 </section>
 <section id="hvad-man-så-gør" class="slide level2">
 <h2>Hvad man så gør</h2>
 <ul>
-<li><p><strong>Skriv alle valg ned.</strong> Hvert eneste. De hører i metodeafsnittet, ikke i en kommentar i koden.</p></li>
-<li><p><strong>Prøv flere kombinationer.</strong> Holder resultatet på tværs af dem, er det <strong>robust</strong>. Gør det ikke, er det et resultat om jeres forbehandling.</p></li>
-<li><p><strong>Denny &amp; Spirling foreslår <code>preText</code></strong>, som kører kombinationerne systematisk og måler, hvor meget de flytter resultatet.</p></li>
+<li><p><strong>Skriv alle valg ned.</strong> De hører i metodeafsnittet, ikke i en kommentar i koden.</p></li>
+<li><p><strong>Prøv flere kombinationer.</strong> Holder resultatet på tværs af dem, er det <strong>robust</strong>.</p></li>
+<li><p><strong>Denny &amp; Spirling foreslag <code>preText</code></strong>, handler om at køre kombinationerne systematisk og måle, hvor meget de flytter resultatet.</p></li>
 </ul>
 </section></section>
 <section>
@@ -714,7 +714,12 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6IiMg
 
 <aside><div>
 <p>Det er derfor, vi har brug for <strong>dimensionalitetsreduktion</strong>.</p>
-</div></aside></section>
+</div></aside></section></section>
+<section>
+<section id="tabeller-giver-mulighed-for-analyse" class="title-slide slide level1 center">
+<h1>Tabeller giver mulighed for analyse</h1>
+
+</section>
 <section id="hunston-hvad-man-kan-med-tællinger" class="slide level2">
 <h2>Hunston: hvad man kan med tællinger</h2>
 <p>Når først materialet er en tabel af optællinger, åbner der sig en række klassiske korpuslingvistiske greb:</p>
@@ -738,7 +743,6 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBy
 </div>
 </div>
 <p><br></p>
-<p>Kig på listen, før I læser videre.</p>
 <p>De hyppigste ord er <code>and</code>, <code>the</code>, <code>of</code>, <code>to</code>, <code>in</code>. Korpusset er ikke kun på dansk.</p>
 </section>
 <section id="korpusset-er-tosproget" class="slide level2">
@@ -758,6 +762,10 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <blockquote>
 <p>Hvad gør I? Frasortér dem, oversæt dem, analysér dem hver for sig?</p>
 </blockquote>
+</section>
+<section id="mere-en-afrunding" class="slide level2">
+<h2>[MERE? EN AFRUNDING?]</h2>
+<p>[MERE? EN AFRUNDING?]</p>
 </section></section>
 <section>
 <section id="del-4-spacy" class="title-slide slide level1 center">
@@ -766,7 +774,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 </section>
 <section id="regler-eller-sprogmodel" class="slide level2">
 <h2>Regler eller sprogmodel</h2>
-<p>Alt, hvad vi har lavet indtil nu, er <strong>regler</strong>: fjern disse tegn, fjern disse ord, klip enderne af.</p>
+<p>Alt, hvad vi har lavet indtil nu, er <strong>regler</strong>: <em>fjern disse tegn, fjern disse ord, klip enderne af.</em></p>
 <p><br></p>
 <ul>
 <li><p>En sprogmodel gør noget andet. Den er trænet på store mængder tekst og afgør ud fra <strong>konteksten</strong>, hvad hvert ord er.</p></li>
@@ -775,7 +783,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <p><br></p>
 
 <aside><div>
-<p>spaCy indeholder kompileret kode og kan ikke køre i browseren. Koden herunder skal køres i UCloud eller lokalt.</p>
+<p>spaCy kan ikke køre i browseren. Den efterfølgende kode skal køres i UCloud eller lokalt.</p>
 </div></aside></section>
 <section id="pipelinen" class="slide level2">
 <h2>Pipelinen</h2>
@@ -797,16 +805,16 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <span id="cb4-16"><a href=""></a>doc <span class="op">=</span> nlp(mikro[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
 <ul>
-<li><p><code>spacy.load()</code> henter en <strong>model</strong>, ikke bare en funktion. Teksten løber gennem en række trin, som hver tilføjer et lag information:</p></li>
-<li><p>Resultatet er ikke en liste af strenge, men et objekt, hvor hvert ord kender sin egen grundform, ordklasse og rolle i sætningen.</p></li>
+<li><p><code>spacy.load()</code> henter en <strong>model</strong>, ikke bare en funktion. Teksten løber gennem en række trin, som hver tilføjer et lag information.</p></li>
+<li><p>Resultatet er ikke en liste, men et objekt, hvor hvert ord kender sin egen grundform, ordklasse og rolle i sætningen, osv.</p></li>
 </ul>
 </section>
 <section class="slide level2">
 
 
 <img data-src="resources/pipeline-design.svg" class="quarto-figure quarto-figure-center r-stretch"></section>
-<section class="slide level2">
-
+<section id="konceptuelt-om-spacy-hvordan-trænet" class="slide level2">
+<h2>[KONCEPTUELT OM SPACY; HVORDAN TRÆNET]</h2>
 <p>[KONCEPTUELT OM SPACY; HVORDAN TRÆNET]</p>
 </section>
 <section id="lemmatisering-i-stedet-for-stemming" class="slide level2">
@@ -819,6 +827,9 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <li><p><strong>Lemmatisering</strong> slår grundformen op i en model, der kender sproget. <code>søger</code>, <code>søgte</code> og <code>søgt</code> bliver alle til <code>søge</code>, og <code>universel</code> bliver ved med at være <code>universel</code>.</p></li>
 </ul>
 <p><br></p>
+</section>
+<section id="indbyggede-stopord" class="slide level2">
+<h2>Indbyggede stopord</h2>
 <p><code>tok.is_stop</code> er en færdig stopordsliste. Den I selv har skrevet var på 78 ord. Den her er lavet af folk, der arbejder med området.</p>
 </section>
 <section id="ordklasser-som-filter" class="slide level2">
@@ -830,7 +841,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <p><br></p>
 <ul>
 <li><p>I jobopslag ligger indholdet i <strong>navneordene</strong>: kompetencer, fag, steder, titler. <strong>Udsagnsordene</strong> er stort set de samme i alle opslag: <em>søger, tilbyder, forventer</em>.</p></li>
-<li><p>Det er en helt anden slags dimensionalitetsreduktion end en stopordsliste og den er begrundet i sproget frem for i en liste, nogen har skrevet.</p></li>
+<li><p>Det er en helt anden slags <code>dimensionalitetsreduktion</code> end en stopordsliste og den er begrundet i sproget frem for i en liste, nogen har skrevet.</p></li>
 </ul>
 </section>
 <section id="hele-korpusset" class="slide level2">
@@ -846,7 +857,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <span id="cb7-9"><a href=""></a><span class="co"># tilbage i tabellen: én liste per opslag, samme rækkefølge</span></span>
 <span id="cb7-10"><a href=""></a>opslag[<span class="st">"ord"</span>] <span class="op">=</span> renset</span>
 <span id="cb7-11"><a href=""></a></span>
-<span id="cb7-12"><a href=""></a><span class="co"># og ud i langt format, ét ord per række - som resten af kæden</span></span>
+<span id="cb7-12"><a href=""></a><span class="co"># og ud i langt format, ét ord per række</span></span>
 <span id="cb7-13"><a href=""></a>lemmaer <span class="op">=</span> opslag[<span class="st">"ord"</span>].explode()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><br></p>
 <ul>
@@ -861,7 +872,7 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <span id="cb8-2"><a href=""></a>doc <span class="op">=</span> nlp(<span class="st">"Vi søger en erfaren socialrådgiver."</span>)</span>
 <span id="cb8-3"><a href=""></a></span>
 <span id="cb8-4"><a href=""></a><span class="co"># mange ad gangen</span></span>
-<span id="cb8-5"><a href=""></a>docs <span class="op">=</span> nlp.pipe([<span class="st">"Vi søger ..."</span>, <span class="st">"Stillingen er ..."</span>, <span class="st">"Du skal ..."</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-5"><a href=""></a>docs <span class="op">=</span> nlp.pipe([<span class="st">"Vi søger ..."</span>, <span class="st">"Stillingen er ..."</span>, <span class="st">"Du skal ..."</span>], batch_size<span class="op">=</span><span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
 <li><p>docs er så en samling, vi kan løbe igennem.</p></li>
 <li><p>batch_size er hvor mange den tager ad gangen. Jo større, des mere kræves der af hukommelsen.</p></li>
@@ -880,17 +891,9 @@ eyJhdHRyIjp7ImF1dG9ydW4iOmZhbHNlLCJlZGl0Ijp0cnVlLCJldmFsIjp0cnVlfSwiY29kZSI6InBh
 <h1>Del 5: Øvelser</h1>
 
 </section>
-<section id="øvelser" class="slide level2 scrollable">
+<section id="øvelser" class="slide level2">
 <h2>Øvelser</h2>
 <p>I får den rå fil, ikke den rensede.</p>
-<ol type="1">
-<li><p><strong>Få filen ind.</strong> Find separator, overskriftsrække og tegnsæt.</p></li>
-<li><p><strong>Hent metadata ud.</strong> Firma, sted og dato ligger i et fritekstfelt. Håndtér de opslag, hvor det ikke passer.</p></li>
-<li><p><strong>Byg kæden.</strong> Kør de fem trin, og skriv tokens og typer ned efter hvert.</p></li>
-<li><p><strong>Skift rækkefølge.</strong> Fjern stopord før små bogstaver. Får I det samme?</p></li>
-<li><p><strong>Byg matricen.</strong> Lav en document-term matrix og beregn dens sparsity.</p></li>
-<li><p><strong>spaCy.</strong> Kør pipelinen på 200 opslag, og sammenlign vokabularet med regelversionen.</p></li>
-</ol>
 <p><strong>Dokumentation:</strong> <a href="https://spacy.io/usage/spacy-101">spaCy 101</a></p>
 
 <script type="pyodide-data">
